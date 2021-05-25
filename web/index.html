@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="pentagonselllit">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>pentagonselllit</title>
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('flutter-first-frame', function () {
+        navigator.serviceWorker.register('flutter_service_worker.js');
+      });
+    }
+  </script>
+
+
+<body>
+  <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+  </body>
+
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyDetDBq3KZYQslrsHtcEhaJnPL4Wyvso8k",
+    authDomain: "selllit-genius.firebaseapp.com",
+    projectId: "selllit-genius",
+    storageBucket: "selllit-genius.appspot.com",
+    messagingSenderId: "39296765963",
+    appId: "1:39296765963:web:d046afcc32c4f5a157370e",
+    measurementId: "G-FJ21G4JL8Z"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+
+
+  <script src="main.dart.js" type="application/javascript"></script>
+</body>
+</html>

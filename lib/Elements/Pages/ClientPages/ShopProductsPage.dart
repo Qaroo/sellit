@@ -1,0 +1,147 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:pentagonselllit/Models/ItemModel.dart';
+import 'package:pentagonselllit/args.dart';
+import '../../ProductsStyles.dart';
+
+Widget FilterTile(BuildContext context, String text) {
+  return ListTile(
+    title:
+        Text(text, style: GoogleFonts.acme(fontSize: 18, color: Colors.black)),
+    trailing: Icon(Icons.check_box_outline_blank_outlined, color: Colors.black),
+  );
+}
+
+//Style 2:
+Widget ShopProductPageStyle2(BuildContext context) {
+  if (MediaQuery.of(context).size.width < MediaQuery.of(context).size.height) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      color: Colors.white,
+      child: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.95,
+          height: MediaQuery.of(context).size.height,
+          color: Colors.white,
+          child: Center(
+            child: GridView.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: (MediaQuery.of(context).size.width * 0.95 / 2) /
+                  (MediaQuery.of(context).size.height * 0.5 + 11),
+              children: List.generate(
+                args.products.length,
+                (index) => ProductStyle1(
+                    args.products[index],
+                    MediaQuery.of(context).size.height * 0.5,
+                    MediaQuery.of(context).size.width * 0.95 / 2,
+                    20),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  return Container(
+    width: MediaQuery.of(context).size.width,
+    color: Colors.white,
+    child: Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height,
+        color: Colors.white,
+        child: Center(
+          child: GridView.count(
+            crossAxisCount: 3,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: (MediaQuery.of(context).size.width * 0.8 / 3) /
+                (MediaQuery.of(context).size.height * 0.5 + 11),
+            children: List.generate(
+              args.products.length,
+              (index) => ProductStyle1(
+                  args.products[index],
+                  MediaQuery.of(context).size.height * 0.5,
+                  MediaQuery.of(context).size.width * 0.8 / 3,
+                  20),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+//Style 1
+Widget ShopProductPageStyle1(BuildContext context) {
+  return Center(
+    child: Container(
+      width: 1400,
+      color: Colors.white,
+      child: Center(
+        child: Column(
+          children: [
+            Container(
+              height: 20,
+            ),
+            Text("CURRENT REFINE",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.acme(
+                    fontSize: 40, fontWeight: FontWeight.bold)),
+            Container(
+              height: 5,
+            ),
+            Text("THIS PAGE INCLUDE: CLOTHING, SNEAKERS & MORE",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.acme(fontSize: 22)),
+            Container(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Container(width: 20),
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: 280,
+                  color: Colors.white,
+                  child: ListView.builder(
+                    itemCount: 12,
+                    itemBuilder: (BuildContext context, int index) {
+                      return FilterTile(
+                          context, "Category " + (index + 1).toString());
+                    },
+                  ),
+                ),
+                Container(width: 10),
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: 1100,
+                  color: Colors.white,
+                  child: GridView.count(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: (1100 / 3) /
+                        (MediaQuery.of(context).size.height * 0.5 + 11),
+                    children: List.generate(
+                      args.products.length,
+                      (index) => ProductStyle1(
+                          args.products[index],
+                          MediaQuery.of(context).size.height * 0.5,
+                          1100 / 3,
+                          20),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
