@@ -10,6 +10,7 @@ import 'Elements/Pages/ClientPages/ShopProductsPage.dart';
 import 'Elements/Pages/UnknownPage.dart';
 import 'Models/ItemModel.dart';
 import 'package:pentagonselllit/args.dart';
+import 'package:pentagonselllit/args.dart' as args;
 
 class ShopRouteInformationParser
     extends RouteInformationParser<ProductRoutePath> {
@@ -74,7 +75,8 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
   Widget build(BuildContext context) {
     print("xyzy3 " + isCollection.toString());
 
-    ItemModel product = null;
+    ItemModel product = args.products[0];
+    print("Product:" + product.toString());
     //for (ItemModel item in args.products) {
     //  if (item.id == _productID) product = item;
     //}

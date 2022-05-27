@@ -10,6 +10,8 @@ class ItemModel {
   String description;
   String id;
   Map<String, dynamic> sizes;
+  List<Map<String, dynamic>> options;
+  List<Map<String, Map<String, dynamic>>> stock;
 
   factory ItemModel.fromMap(Map<String, dynamic> map) {
     return ItemModel(
@@ -21,6 +23,8 @@ class ItemModel {
         gender: map['gender'],
         description: map['description'],
         sizes: map['sizes'],
+        options: map['options'],
+        stock: map['stock'],
         id: map['id']);
   }
 
@@ -34,6 +38,8 @@ class ItemModel {
         gender: snap['gender'],
         description: snap['description'],
         sizes: snap['sizes'],
+        options: snap['options'],
+        stock: snap['stock'],
         id: snap['idi']);
   }
 
@@ -46,5 +52,7 @@ class ItemModel {
       this.gender,
       this.description,
       this.id,
-      this.sizes});
+      this.sizes,
+      this.options,
+      this.stock});
 }

@@ -11,6 +11,7 @@ class ShopProductPage1 extends StatefulWidget {
 
   ItemModel productz;
   String selectedSize = "";
+  Map<String, dynamic> selectedOption = {};
 
   @override
   _ShopProductPage1State createState() => _ShopProductPage1State();
@@ -20,12 +21,157 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
   @override
   Widget build(BuildContext context) {
     ItemModel product = widget.productz;
+    print("Options: " + product.name);
+    //product.options => [{Color:["Red","Blue","Green"]},{"Size":["S","M","L"]}]
+    List<Widget> options = [];
+    for (Map option in product.options) {
+      List<dynamic> values = option[option.keys.elementAt(0)];
+      String option_name = option.keys.elementAt(0);
+      options.add(Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: Text(
+          option.keys.elementAt(0),
+          style: GoogleFonts.gidugu(
+            fontSize: 28,
+          ),
+          textAlign: TextAlign.left,
+        ),
+      ));
+      options.add(Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: 150,
+        child: GridView.count(
+          crossAxisCount:
+              (MediaQuery.of(context).size.width * 0.9 / 100).toInt(),
+          childAspectRatio: 100 / 40,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          children: List.generate(
+            values.length,
+            (index) {
+              return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      widget.selectedOption[option_name] =
+                          values.elementAt(index);
+                    });
+                  },
+                  child: (widget.selectedOption[option_name] ==
+                          values.elementAt(index))
+                      ? Container(
+                          width: 100,
+                          height: 40,
+                          color: Color.fromRGBO(245, 245, 245, 1),
+                          child: Center(
+                            child: Text(
+                              values[index],
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          width: 100,
+                          height: 40,
+                          color: Color.fromRGBO(0, 0, 0, 1),
+                          child: Center(
+                            child: Text(
+                              values[index],
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ));
+            },
+          ),
+        ),
+      ));
+      options.add(Container(height: 20));
+    }
     List<String> si = [];
-    for (String size in product.sizes.keys) {
+    for (String size in ["S", "M", "L"]) {
       si.add(size);
     }
     int inrow = 4;
-    if (args.products.length < 4) inrow = args.products.length;
+    List<Widget> page = [];
+    page = [
+      Container(
+        height: 20,
+      ),
+      Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: Text(
+          product.name,
+          style: GoogleFonts.gidugu(fontSize: 40),
+          textAlign: TextAlign.left,
+        ),
+      ),
+      Container(
+        color: Colors.black,
+        height: 0.5,
+        width: MediaQuery.of(context).size.width * 0.9,
+      ),
+      Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: Text(
+          product.price + " nis",
+          style: GoogleFonts.gidugu(fontSize: 28),
+          textAlign: TextAlign.left,
+        ),
+      ),
+      Container(
+        color: Colors.black,
+        height: 0.5,
+        width: MediaQuery.of(context).size.width * 0.9,
+      )
+    ];
+    for (Widget wid in options) {
+      page.add(wid);
+    }
+    page += [
+      Column(
+        children: [
+          Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width * 0.9 - 20,
+            color: Colors.black,
+            child: Center(
+              child: GestureDetector(
+                onTap: () {
+                  //phone
+                  if (widget.selectedSize == "") {
+                    Widget okButton = FlatButton(
+                      child: Text("OK"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    );
+
+                    // set up the AlertDialog
+                    AlertDialog alert = AlertDialog(
+                      title: Text("Error"),
+                      content: Text("No size selected."),
+                      actions: [
+                        okButton,
+                      ],
+                    );
+
+                    // show the dialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return alert;
+                      },
+                    );
+                  }
+                },
+                child:
+                    Text("Add to cart", style: TextStyle(color: Colors.white)),
+              ),
+            ),
+          )
+        ],
+      )
+    ];
+
     if (MediaQuery.of(context).size.width < MediaQuery.of(context).size.height)
       return Container(
         color: Colors.white,
@@ -46,146 +192,7 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                     Container(height: 10),
                     Container(
                       width: MediaQuery.of(context).size.width - 20,
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 20,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: Text(
-                              product.name,
-                              style: GoogleFonts.gidugu(fontSize: 40),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Container(
-                            color: Colors.black,
-                            height: 0.5,
-                            width: MediaQuery.of(context).size.width * 0.9,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: Text(
-                              product.price + " nis",
-                              style: GoogleFonts.gidugu(fontSize: 28),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Container(
-                            color: Colors.black,
-                            height: 0.5,
-                            width: MediaQuery.of(context).size.width * 0.9,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: Text(
-                              "Size",
-                              style: GoogleFonts.gidugu(
-                                fontSize: 28,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            height: 150,
-                            child: GridView.count(
-                              crossAxisCount:
-                                  (MediaQuery.of(context).size.width *
-                                          0.9 /
-                                          100)
-                                      .toInt(),
-                              childAspectRatio: 100 / 40,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                              children: List.generate(
-                                product.sizes.length,
-                                (index) {
-                                  return GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          widget.selectedSize = si[index];
-                                          print(widget.selectedSize);
-                                        });
-                                      },
-                                      child: (widget.selectedSize == si[index])
-                                          ? Container(
-                                              width: 100,
-                                              height: 40,
-                                              color: Color.fromRGBO(
-                                                  245, 245, 245, 1),
-                                              child: Center(
-                                                child: Text(
-                                                  si[index],
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                ),
-                                              ),
-                                            )
-                                          : Container(
-                                              width: 100,
-                                              height: 40,
-                                              color: Color.fromRGBO(0, 0, 0, 1),
-                                              child: Center(
-                                                child: Text(
-                                                  si[index],
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            ));
-                                },
-                              ),
-                            ),
-                          ),
-                          Container(height: 20),
-                          Column(
-                            children: [
-                              Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.9 -
-                                    20,
-                                color: Colors.black,
-                                child: Center(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      //phone
-                                      if (widget.selectedSize == "") {
-                                        Widget okButton = FlatButton(
-                                          child: Text("OK"),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                        );
-
-                                        // set up the AlertDialog
-                                        AlertDialog alert = AlertDialog(
-                                          title: Text("Error"),
-                                          content: Text("No size selected."),
-                                          actions: [
-                                            okButton,
-                                          ],
-                                        );
-
-                                        // show the dialog
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return alert;
-                                          },
-                                        );
-                                      }
-                                    },
-                                    child: Text("Add to cart",
-                                        style: TextStyle(color: Colors.white)),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
+                      child: Column(children: page),
                     ),
                   ],
                 ),
