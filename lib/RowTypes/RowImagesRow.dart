@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 class rowImagesRow {
   double height;
   double radius;
-  List<String> images;
+  List<dynamic> images;
 
   rowImagesRow({this.height, this.images, this.radius});
 
@@ -17,7 +17,10 @@ class rowImagesRow {
 
   Widget toWidget(BuildContext context) {
     List<Widget> widgets = [];
-    List<String> urls = images;
+    List<dynamic> urls = images;
+    if (height < 1) {
+      height = MediaQuery.of(context).size.height * height;
+    }
     for (int i = 0; i < urls.length; i++) {
       widgets.add(Center(
         child: ClipRRect(

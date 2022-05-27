@@ -1,9 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pentagonselllit/Elements/Pages/ClientHomePage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Widget AssosAppBar(BuildContext context, String from) {
+import '../../product_route_pth.dart';
+import '../../route.dart';
+
+Widget AssosAppBar(
+    GlobalKey<ScaffoldState> globalKey, BuildContext context, String from) {
   print("From: " + from);
   if (MediaQuery.of(context).size.width <= MediaQuery.of(context).size.height) {
     return Container(
@@ -19,10 +24,17 @@ Widget AssosAppBar(BuildContext context, String from) {
                 Container(
                   width: 10,
                 ),
-                Text(
-                  "SHOP NAME",
-                  style: GoogleFonts.gidugu(
-                      fontSize: 40, color: Color.fromRGBO(50, 50, 50, 1)),
+                GestureDetector(
+                  onTap: () {
+                    print("xyzyz2home");
+                    (Router.of(context).routerDelegate as ProductRouterDelegate)
+                        .setNewRoutePath(ProductRoutePath.home());
+                  },
+                  child: Text(
+                    "RY SHOPPER",
+                    style: GoogleFonts.gidugu(
+                        fontSize: 48, color: Color.fromRGBO(50, 50, 50, 1)),
+                  ),
                 ),
               ],
             ),
@@ -46,7 +58,7 @@ Widget AssosAppBar(BuildContext context, String from) {
                   ),
                   onTap: () {
                     print("open drawer ");
-                    Scaffold.of(context).openDrawer();
+                    globalKey.currentState.openDrawer();
                   },
                 ),
                 Container(
@@ -72,10 +84,17 @@ Widget AssosAppBar(BuildContext context, String from) {
               Container(
                 width: 30,
               ),
-              Text(
-                "SHOP NAME",
-                style: GoogleFonts.gidugu(
-                    fontSize: 48, color: Color.fromRGBO(50, 50, 50, 1)),
+              GestureDetector(
+                onTap: () {
+                  print("xyzyhome");
+                  (Router.of(context).routerDelegate as ProductRouterDelegate)
+                      .setNewRoutePath(ProductRoutePath.home());
+                },
+                child: Text(
+                  "RY SHOPPER",
+                  style: GoogleFonts.gidugu(
+                      fontSize: 48, color: Color.fromRGBO(50, 50, 50, 1)),
+                ),
               ),
             ],
           ),
@@ -87,7 +106,8 @@ Widget AssosAppBar(BuildContext context, String from) {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "/");
+                  (Router.of(context).routerDelegate as ProductRouterDelegate)
+                      .setNewRoutePath(ProductRoutePath.home());
                 },
                 child: Text(
                   "Home",
@@ -99,7 +119,8 @@ Widget AssosAppBar(BuildContext context, String from) {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "CollectionPage");
+                  (Router.of(context).routerDelegate as ProductRouterDelegate)
+                      .setNewRoutePath(ProductRoutePath.collection());
                 },
                 child: Text(
                   "Catalog",

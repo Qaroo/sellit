@@ -32,19 +32,17 @@ class RowTextModel {
   }
 
   Widget toWidget() {
-    print("padding: " + padding);
-    print("textcolor: " + textColor);
     List<String> paddings = padding.split(",");
     double leftPadding = double.parse(paddings[0]);
     double topPadding = double.parse(paddings[1]);
     double rightPadding = double.parse(paddings[2]);
     double bottomPadding = double.parse(paddings[3]);
+
     return Padding(
       padding: EdgeInsets.fromLTRB(
           leftPadding, topPadding, rightPadding, bottomPadding),
       child: Text(text,
-          style: GoogleFonts.getFont(
-            font,
+          style: GoogleFonts.ubuntu(
             fontSize: fontSize,
             color: Color.fromRGBO(
               int.parse(textColor.split(",")[0]),

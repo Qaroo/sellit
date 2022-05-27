@@ -2,8 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pentagonselllit/Models/ItemModel.dart';
-import 'package:pentagonselllit/args.dart';
+import 'package:pentagonselllit/args.dart' as args;
+import '../../../product_route_pth.dart';
+import '../../../route.dart';
 import '../../ProductsStyles.dart';
+import '../../TempView.dart';
+import 'ShopProductPage.dart';
 
 Widget FilterTile(BuildContext context, String text) {
   return ListTile(
@@ -15,6 +19,7 @@ Widget FilterTile(BuildContext context, String text) {
 
 //Style 2:
 Widget ShopProductPageStyle2(BuildContext context) {
+  print("COllection product:" + args.products.toString());
   if (MediaQuery.of(context).size.width < MediaQuery.of(context).size.height) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -33,11 +38,17 @@ Widget ShopProductPageStyle2(BuildContext context) {
                   (MediaQuery.of(context).size.height * 0.5 + 11),
               children: List.generate(
                 args.products.length,
-                (index) => ProductStyle1(
-                    args.products[index],
-                    MediaQuery.of(context).size.height * 0.5,
-                    MediaQuery.of(context).size.width * 0.95 / 2,
-                    20),
+                (index) => GestureDetector(
+                  onTap: () {
+                    (Router.of(context).routerDelegate as ProductRouterDelegate)
+                        .setNewRoutePath(ProductRoutePath.details("123"));
+                  },
+                  child: ProductStyle1(
+                      args.products[index],
+                      MediaQuery.of(context).size.height * 0.5,
+                      MediaQuery.of(context).size.width * 0.95 / 2,
+                      20),
+                ),
               ),
             ),
           ),

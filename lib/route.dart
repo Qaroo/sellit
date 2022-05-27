@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pentagonselllit/Elements/Pages/ClientCollectionPage.dart';
 import 'package:pentagonselllit/Elements/TempView.dart';
 import 'package:pentagonselllit/product_route_pth.dart';
 
@@ -15,6 +16,8 @@ class ShopRouteInformationParser
   @override
   Future<ProductRoutePath> parseRouteInformation(
       RouteInformation routeInformation) async {
+    print("xyzy1");
+
     final uri = Uri.parse(routeInformation.location);
     if (uri.pathSegments.length == 0) return ProductRoutePath.home();
 
@@ -33,6 +36,8 @@ class ShopRouteInformationParser
 
   @override
   RouteInformation restoreRouteInformation(ProductRoutePath path) {
+    print("xyzy2 " + path.isCollection.toString());
+
     if (path.isCollection) return RouteInformation(location: '/collection');
     if (path.isUnknown) return RouteInformation(location: '/404');
     if (path.isHomePage) return RouteInformation(location: '/');
@@ -55,6 +60,7 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
 
   @override
   ProductRoutePath get currentConfiguration {
+    print("xyzy10 " + isCollection.toString());
     if (show404) return ProductRoutePath.unknown();
 
     if (_productID == null && !isCollection) return ProductRoutePath.home();
@@ -66,38 +72,41 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
 
   @override
   Widget build(BuildContext context) {
-    ItemModel product = args.products[0];
-    for (ItemModel item in args.products) {
-      if (item.id == _productID) product = item;
-    }
+    print("xyzy3 " + isCollection.toString());
+
+    ItemModel product = null;
+    //for (ItemModel item in args.products) {
+    //  if (item.id == _productID) product = item;
+    //}
     return Navigator(
       key: navigatorKey,
       pages: [
         MaterialPage(
           key: ValueKey('HomePage'),
-          child: ClientHomePage(domain: "localhost:49954"),
+          child: ClientHomePage(domain: "shop"),
         ),
         if (isProduct)
           MaterialPage(
             child: TemplateView(
-              widgets: ProductPageStyle1(context, product),
+              widgets: ShopProductPage1(
+                productz: product,
+              ),
             ),
           ),
         if (isCollection)
           MaterialPage(
             key: ValueKey('CollectionPage'),
-            child: TemplateView(
-              widgets: ShopProductPageStyle2(context),
-            ),
+            child: ClientCollectionPage(domain: "shop"),
           ),
         if (show404)
           MaterialPage(key: ValueKey('UknownKey'), child: UnknownPage()),
       ],
       onPopPage: (route, result) {
+        print("xyzy4 ");
         if (!route.didPop(result)) return false;
 
         _productID = null;
-        show404 = false;
+        show404 = true;
         isCollection = false;
         isProduct = false;
         notifyListeners();
@@ -109,17 +118,34 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
 
   @override
   Future<void> setNewRoutePath(ProductRoutePath path) async {
+    print("xyzy5 " + path.isProductPage.toString());
+
     isProduct = path.isProductPage;
+
+    if (path.isHomePage) {
+      isCollection = false;
+      _productID = null;
+      show404 = false;
+      isProduct = false;
+      notifyListeners();
+      return;
+    }
+    print("xyzy Continue");
+
     if (path.isUnknown) {
       _productID = null;
       show404 = true;
       isProduct = false;
+      notifyListeners();
       return;
     }
 
     if (path.isProductPage) {
       _productID = path.id;
+      isProduct = true;
+      isCollection = false;
     } else if (path.isCollection) {
+      print("xyzy12");
       _productID = null;
       isProduct = false;
       isCollection = true;

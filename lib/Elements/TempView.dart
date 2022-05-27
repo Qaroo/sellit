@@ -10,13 +10,15 @@ class TemplateView extends StatefulWidget {
 }
 
 class _TemplateViewState extends State<TemplateView> {
+  final globalKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     List<Widget> wid = [];
-    wid.add(AssosAppBar(context, "template"));
+    wid.add(AssosAppBar(globalKey, context, "template"));
     wid.add(Center(child: widget.widgets));
 
     return Scaffold(
+      key: globalKey,
       body: Center(
         child: ListView(
           shrinkWrap: true,

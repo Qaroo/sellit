@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 class rowImagesWithTextRow {
   double height;
   double radius;
-  List<String> images;
+  List<dynamic> images;
 
   rowImagesWithTextRow({this.height, this.images, this.radius});
 
@@ -17,13 +17,14 @@ class rowImagesWithTextRow {
 
   Widget toWidget(BuildContext context) {
     List<Widget> widgets = [];
-    List<String> urls = images;
+    print("imagessssss: " + images.length.toString());
+    List<dynamic> urls = images;
     for (int i = 0; i < urls.length; i++) {
       widgets.add(Center(
         child: ClipRRect(
           borderRadius: BorderRadius.circular(radius),
           child: Image.network(
-            urls[i],
+            urls[i].toString(),
             fit: BoxFit.cover,
             height: height,
           ),

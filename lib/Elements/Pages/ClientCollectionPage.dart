@@ -3,22 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:pentagonselllit/Elements/LoadingIndicator.dart';
 import 'package:pentagonselllit/Elements/Pages/ClientPages/ShopHomePage.dart';
+import 'package:pentagonselllit/Elements/Pages/ClientPages/ShopProductsPage.dart';
 import 'package:pentagonselllit/Elements/Pages/UnknownPage.dart';
 import 'package:pentagonselllit/Models/ItemModel.dart';
 import 'package:pentagonselllit/args.dart' as args;
 
+import '../TempView.dart';
+
 List<ItemModel> itemsCollection;
 String totalShopID;
 
-class ClientHomePage extends StatefulWidget {
+class ClientCollectionPage extends StatefulWidget {
   String domain;
-  ClientHomePage({this.domain, Key key}) : super(key: key);
+  ClientCollectionPage({this.domain, Key key}) : super(key: key);
 
   @override
-  _ClientHomePageState createState() => _ClientHomePageState();
+  _ClientCollectionPageState createState() => _ClientCollectionPageState();
 }
 
-class _ClientHomePageState extends State<ClientHomePage> {
+class _ClientCollectionPageState extends State<ClientCollectionPage> {
   bool finishLoad = false;
   bool hasShop = true;
   bool loadTheme = false;
@@ -79,7 +82,7 @@ class _ClientHomePageState extends State<ClientHomePage> {
                 items = now;
                 args.products = items;
                 shopIDZ = shopID;
-                return ShopHomePage(shopID: shopID);
+                return TemplateView(widgets: ShopProductPageStyle2(context));
               }
             });
           });
@@ -94,7 +97,7 @@ class _ClientHomePageState extends State<ClientHomePage> {
       return UnknownPage();
     }
     return Container(
-      child: ShopHomePage(shopID: shopIDZ),
+      child: TemplateView(widgets: ShopProductPageStyle2(context)),
     );
   }
 }
