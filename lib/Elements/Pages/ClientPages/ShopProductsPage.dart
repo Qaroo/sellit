@@ -42,7 +42,7 @@ Widget ShopProductPageStyle2(BuildContext context) {
                   onTap: () {
                     (Router.of(context).routerDelegate as ProductRouterDelegate)
                         .setNewRoutePath(
-                            ProductRoutePath.details("MqBMAQjPHkOirK99X57d"));
+                            ProductRoutePath.details(args.products[index].id));
                   },
                   child: ProductStyle1(
                       args.products[index],

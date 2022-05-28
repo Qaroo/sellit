@@ -7,6 +7,7 @@ import 'package:pentagonselllit/product_route_pth.dart';
 import 'Elements/Pages/ClientHomePage.dart';
 import 'Elements/Pages/ClientPages/ShopProductPage.dart';
 import 'Elements/Pages/ClientPages/ShopProductsPage.dart';
+import 'Elements/Pages/ClientProductPage.dart';
 import 'Elements/Pages/UnknownPage.dart';
 import 'Models/ItemModel.dart';
 import 'package:pentagonselllit/args.dart';
@@ -73,10 +74,6 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
 
   @override
   Widget build(BuildContext context) {
-    print("xyzy3 " + isCollection.toString());
-
-    ItemModel product = args.products[0];
-    print("Product:" + product.toString());
     //for (ItemModel item in args.products) {
     //  if (item.id == _productID) product = item;
     //}
@@ -89,11 +86,8 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
         ),
         if (isProduct)
           MaterialPage(
-            child: TemplateView(
-              widgets: ShopProductPage1(
-                productz: product,
-              ),
-            ),
+            key: ValueKey('ProductPage'),
+            child: ClientProductPage(domain: "shop", product_id: _productID),
           ),
         if (isCollection)
           MaterialPage(

@@ -10,7 +10,7 @@ class ItemModel {
   String description;
   String id;
   Map<String, dynamic> sizes;
-  List<Map<String, dynamic>> options;
+  List<dynamic> options;
   List<Map<String, Map<String, dynamic>>> stock;
 
   factory ItemModel.fromMap(Map<String, dynamic> map) {

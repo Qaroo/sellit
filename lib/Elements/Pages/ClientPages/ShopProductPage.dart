@@ -21,12 +21,13 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
   @override
   Widget build(BuildContext context) {
     ItemModel product = widget.productz;
-    print("Options: " + product.name);
-    //product.options => [{Color:["Red","Blue","Green"]},{"Size":["S","M","L"]}]
+    print("Options_valid: " + product.options.toString());
+    print("Options_valid: " + product.options.length.toString());
     List<Widget> options = [];
     for (Map option in product.options) {
       List<dynamic> values = option[option.keys.elementAt(0)];
       String option_name = option.keys.elementAt(0);
+      print("option_name: " + option_name);
       options.add(Container(
         width: MediaQuery.of(context).size.width * 0.9,
         child: Text(
@@ -39,7 +40,7 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
       ));
       options.add(Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        height: 150,
+        height: 40,
         child: GridView.count(
           crossAxisCount:
               (MediaQuery.of(context).size.width * 0.9 / 100).toInt(),
@@ -204,27 +205,6 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                       style: GoogleFonts.ubuntu(
                         fontSize: 28,
                       ),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.white,
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: (MediaQuery.of(context).size.width / 2) /
-                        (MediaQuery.of(context).size.height * 0.4 + 60),
-                    physics: new NeverScrollableScrollPhysics(),
-                    children: List.generate(
-                      inrow,
-                      (index) => ProductStyle1(
-                          args.products[index],
-                          MediaQuery.of(context).size.height * 0.4,
-                          MediaQuery.of(context).size.width / 2,
-                          20),
                     ),
                   ),
                 ),
