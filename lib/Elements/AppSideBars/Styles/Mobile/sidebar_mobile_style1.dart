@@ -45,19 +45,45 @@ class sidebar_mobile_style1 {
     }
   }
 
-  Widget getStyle(List<SidebarCategoryModel> categories) {
+  Widget getStyle(List<SidebarCategoryModel> categories, bool logo) {
     List<Widget> page = [];
-    page += [
-      Padding(
-        padding: EdgeInsets.all(16),
-        child: Text("SITE NAME"),
-      ),
-      Divider(color: Colors.black),
-    ];
-    print("Catt");
+    if (logo == true) {
+      page += [
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: Image.network(
+            "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Wix.com_website_logo.svg/2560px-Wix.com_website_logo.svg.png",
+            width: 20,
+            height: 20,
+          ),
+        ),
+        Divider(
+          color: Colors.grey.shade400,
+          thickness: 1.0,
+        ),
+      ];
+    } else {
+      page += [
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: Text("SITE NAME"),
+        ),
+        Divider(
+          color: Colors.grey.shade400,
+          thickness: 1.0,
+        ),
+      ];
+    }
+
     for (SidebarCategoryModel category in categories) {
       page += getRow(category);
     }
+    page.add(
+      Divider(
+        color: Colors.grey.shade400,
+        thickness: 1.0,
+      ),
+    );
     return ListView(
       children: page,
     );

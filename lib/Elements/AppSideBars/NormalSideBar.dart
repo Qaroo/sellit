@@ -34,6 +34,6 @@ class NormalSideBar extends StatelessWidget {
     name.add(SidebarCategoryModel.fromMap(
         {"title": "Ilay", "ontap": "x", "childs": null}));
 
-    return Drawer(child: sidebar_mobile_style1().getStyle(name));
+    return Drawer(child: sidebar_mobile_style1().getStyle(name, true));
   }
 }
