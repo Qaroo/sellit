@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:html' as html;
+
+import '../product_route_pth.dart';
+import '../route.dart';
 
 class RowImageSlideShow {
   double height;
@@ -11,6 +15,7 @@ class RowImageSlideShow {
   String fit;
   String padding;
   Map<String, dynamic> texts;
+  String ontap;
 
   RowImageSlideShow(
       {this.height,
@@ -20,7 +25,37 @@ class RowImageSlideShow {
       this.image,
       this.fit,
       this.texts,
-      this.width});
+      this.width,
+      this.ontap});
+
+  tapped(BuildContext context) {
+    if (ontap.contains("url:")) {
+      String url = ontap.split("url:")[1];
+      html.window.open(url, 'new tab');
+    } else if (ontap.contains("page:")) {
+      String page = ontap.split(":")[1];
+      switch (page) {
+        case "collection":
+          {
+            List<String> tags = ontap.split(":")[2].split(",");
+            (Router.of(context).routerDelegate as ProductRouterDelegate)
+                .setNewRoutePath(ProductRoutePath.collection(tags));
+          }
+          break;
+        case "cart":
+          {
+            //we dont have cart yet.
+          }
+          break;
+        case "product":
+          {
+            String productID = ontap.split(":")[2];
+            (Router.of(context).routerDelegate as ProductRouterDelegate)
+                .setNewRoutePath(ProductRoutePath.details(productID));
+          }
+      }
+    }
+  }
 
   factory RowImageSlideShow.fromMap(Map<String, dynamic> map) {
     return RowImageSlideShow(
@@ -32,6 +67,7 @@ class RowImageSlideShow {
       fit: map["fit"],
       texts: map["texts"],
       width: map["width"],
+      ontap: map["ontap"],
     );
   }
   factory RowImageSlideShow.fromMap2(Map<String, dynamic> map) {
@@ -43,6 +79,7 @@ class RowImageSlideShow {
       image: map["images"],
       fit: map["fit"],
       width: map["width"],
+      ontap: map["ontap"],
     );
   }
 

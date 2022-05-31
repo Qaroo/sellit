@@ -9,6 +9,7 @@ class ItemModel {
   String gender;
   String description;
   String id;
+  List<dynamic> tags;
   Map<String, dynamic> sizes;
   List<dynamic> options;
   List<Map<String, Map<String, dynamic>>> stock;
@@ -25,6 +26,7 @@ class ItemModel {
         sizes: map['sizes'],
         options: map['options'],
         stock: map['stock'],
+        tags: map['tags'],
         id: map['id']);
   }
 
@@ -40,6 +42,7 @@ class ItemModel {
         sizes: snap['sizes'],
         options: snap['options'],
         stock: snap['stock'],
+        tags: snap['tags'],
         id: snap['idi']);
   }
 
@@ -54,5 +57,6 @@ class ItemModel {
       this.id,
       this.sizes,
       this.options,
-      this.stock});
+      this.stock,
+      this.tags});
 }

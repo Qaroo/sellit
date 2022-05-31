@@ -27,10 +27,14 @@ class ShopRouteInformationParser
       if (uri.pathSegments[0] == "product") {
         return ProductRoutePath.details(uri.pathSegments[1]);
       }
+      if (uri.pathSegments[0] == "collection") {
+        List<String> tags = uri.pathSegments[1].split(",");
+        return ProductRoutePath.collection(tags);
+      }
     }
 
     if (uri.pathSegments[0] == "collection") {
-      return ProductRoutePath.collection();
+      return ProductRoutePath.collection([]);
     }
 
     return ProductRoutePath.unknown();
@@ -40,6 +44,14 @@ class ShopRouteInformationParser
   RouteInformation restoreRouteInformation(ProductRoutePath path) {
     print("xyzy2 " + path.isCollection.toString());
 
+    if (path.isCollection && path.tags.length > 0) {
+      String builder = "";
+      for (String current in path.tags) {
+        builder += current + ",";
+      }
+      builder = builder.substring(0, builder.length - 1);
+      return RouteInformation(location: '/collection/${builder}');
+    }
     if (path.isCollection) return RouteInformation(location: '/collection');
     if (path.isUnknown) return RouteInformation(location: '/404');
     if (path.isHomePage) return RouteInformation(location: '/');
@@ -53,6 +65,7 @@ class ShopRouteInformationParser
 class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<ProductRoutePath> {
   String _productID;
+  List<String> tags;
   bool show404 = false;
   bool isProduct = false;
   bool isCollection = false;
@@ -67,7 +80,7 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
 
     if (_productID == null && !isCollection) return ProductRoutePath.home();
 
-    if (isCollection) return ProductRoutePath.collection();
+    if (isCollection) return ProductRoutePath.collection(tags);
 
     return ProductRoutePath.details(_productID);
   }
@@ -92,7 +105,7 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
         if (isCollection)
           MaterialPage(
             key: ValueKey('CollectionPage'),
-            child: ClientCollectionPage(domain: "shop"),
+            child: ClientCollectionPage(domain: "shop", tags: tags),
           ),
         if (show404)
           MaterialPage(key: ValueKey('UknownKey'), child: UnknownPage()),
@@ -142,6 +155,7 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
       isCollection = false;
     } else if (path.isCollection) {
       print("xyzy12");
+      tags = path.tags;
       _productID = null;
       isProduct = false;
       isCollection = true;

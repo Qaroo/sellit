@@ -120,7 +120,8 @@ Widget AssosAppBar(
               TextButton(
                 onPressed: () {
                   (Router.of(context).routerDelegate as ProductRouterDelegate)
-                      .setNewRoutePath(ProductRoutePath.collection());
+                      .setNewRoutePath(
+                          ProductRoutePath.collection(["shoes", "nike"]));
                 },
                 child: Text(
                   "Catalog",

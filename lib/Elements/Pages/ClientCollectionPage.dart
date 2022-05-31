@@ -15,7 +15,8 @@ String totalShopID;
 
 class ClientCollectionPage extends StatefulWidget {
   String domain;
-  ClientCollectionPage({this.domain, Key key}) : super(key: key);
+  List<String> tags;
+  ClientCollectionPage({this.domain, this.tags, Key key}) : super(key: key);
 
   @override
   _ClientCollectionPageState createState() => _ClientCollectionPageState();
@@ -66,10 +67,23 @@ class _ClientCollectionPageState extends State<ClientCollectionPage> {
           snapshot2.then((snap) {
             List<ItemModel> now = [];
             snap.docs.forEach((element) {
+              print("tagsz: " + widget.tags.toString());
               ItemModel item = ItemModel.fromMap(element.data());
-              if (element.data()['sizes'] != null)
-                item.sizes = element.data()['sizes'];
-              now.add(item);
+              bool valid = true;
+              if (widget.tags.length > 0) {
+                if (item.tags != null) {
+                  for (String current_tag in widget.tags) {
+                    if (!item.tags.contains(current_tag)) {
+                      valid = false;
+                    }
+                  }
+                  if (valid) {
+                    now.add(item);
+                  }
+                }
+              } else {
+                now.add(item);
+              }
             });
             setState(() {
               print("snap: " + snap.docs.length.toString());
