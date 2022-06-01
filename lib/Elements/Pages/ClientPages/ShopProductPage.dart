@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pentagonselllit/Models/ItemModel.dart';
 import 'package:pentagonselllit/args.dart' as args;
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../Models/ItemCartModel.dart';
 import '../../ProductsStyles.dart';
 
 class ShopProductPage1 extends StatefulWidget {
@@ -11,7 +15,7 @@ class ShopProductPage1 extends StatefulWidget {
 
   ItemModel productz;
   String selectedSize = "";
-  Map<String, dynamic> selectedOption = {};
+  Map<String, dynamic> selectedOptions = {};
 
   @override
   _ShopProductPage1State createState() => _ShopProductPage1State();
@@ -52,11 +56,11 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                 return GestureDetector(
                     onTap: () {
                       setState(() {
-                        widget.selectedOption[option_name] =
+                        widget.selectedOptions[option_name] =
                             values.elementAt(index);
                       });
                     },
-                    child: (widget.selectedOption[option_name] ==
+                    child: (widget.selectedOptions[option_name] ==
                             values.elementAt(index))
                         ? Container(
                             width: 100,
@@ -164,8 +168,29 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                     );
                   }
                 },
-                child:
-                    Text("Add to cart", style: TextStyle(color: Colors.white)),
+                child: GestureDetector(
+                  onTap: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    ItemCartModel model = ItemCartModel(
+                        name: product.name,
+                        price: product.price,
+                        id: product.id,
+                        image1: product.image1,
+                        selected_options: widget.selectedOptions);
+                    String string_model = json.encode(model.toMap());
+                    List<String> items = prefs.getStringList('cart');
+                    if (items == null) {
+                      items = [];
+                    }
+                    items.add(string_model);
+                    await prefs.setStringList("cart", items);
+                    print("Cart: " + prefs.getStringList("cart").toString());
+                  },
+                  child: Text(
+                    "Add to cart",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
             ),
           )
