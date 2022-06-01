@@ -39,5 +39,5 @@ class ProductRoutePath {
         isCollection = false;
 
   bool get isHomePage => id == null && !isCollection && !isCart;
-  bool get isProductPage => id != null && !isCollection;
+  bool get isProductPage => id != null && !isCollection && !isCart;
 }

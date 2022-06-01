@@ -19,9 +19,10 @@ class ShopRouteInformationParser
   @override
   Future<ProductRoutePath> parseRouteInformation(
       RouteInformation routeInformation) async {
-    print("xyzy1");
-
     final uri = Uri.parse(routeInformation.location);
+    if (uri.pathSegments[0] == "cart") {
+      return ProductRoutePath.cart();
+    }
     if (uri.pathSegments.length == 0) return ProductRoutePath.home();
 
     if (uri.pathSegments.length == 2) {
@@ -33,9 +34,7 @@ class ShopRouteInformationParser
         return ProductRoutePath.collection(tags);
       }
     }
-    if (uri.pathSegments[0] == "cart") {
-      return ProductRoutePath.cart();
-    }
+
     if (uri.pathSegments[0] == "collection") {
       return ProductRoutePath.collection([]);
     }
@@ -45,7 +44,10 @@ class ShopRouteInformationParser
 
   @override
   RouteInformation restoreRouteInformation(ProductRoutePath path) {
-    print("xyzy2 " + path.isCollection.toString());
+    print("xyzy cart::: " + path.isCart.toString());
+    print("xyzy collection::: " + path.isCollection.toString());
+    print("xyzy unknown::: " + path.isUnknown.toString());
+    print("xyzy home::: " + path.isHomePage.toString());
 
     if (path.isCart) return RouteInformation(location: '/cart');
 
@@ -84,7 +86,8 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
   ProductRoutePath get currentConfiguration {
     if (show404) return ProductRoutePath.unknown();
 
-    if (_productID == null && !isCollection) return ProductRoutePath.home();
+    if (_productID == null && !isCollection && !isCart)
+      return ProductRoutePath.home();
 
     if (isCollection) return ProductRoutePath.collection(tags);
 
@@ -131,6 +134,7 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
         show404 = true;
         isCollection = false;
         isProduct = false;
+        isCart = false;
         notifyListeners();
 
         return true;

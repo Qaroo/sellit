@@ -210,7 +210,7 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                           name: product.name,
                           price: product.price,
                           id: product.id,
-                          image1: product.image1,
+                          image: product.image1,
                           selected_options: widget.selectedOptions);
                       String string_model = json.encode(model.toMap());
                       List<String> items = prefs.getStringList('cart');

@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:pentagonselllit/Elements/LoadingIndicator.dart';
+import 'package:pentagonselllit/Elements/Pages/ClientPages/ShopCartPage.dart';
 import 'package:pentagonselllit/Elements/Pages/ClientPages/ShopHomePage.dart';
 import 'package:pentagonselllit/Elements/Pages/ClientPages/ShopProductsPage.dart';
 import 'package:pentagonselllit/Elements/Pages/UnknownPage.dart';
 import 'package:pentagonselllit/Models/ItemModel.dart';
 import 'package:pentagonselllit/args.dart' as args;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Models/ItemCartModel.dart';
 import '../TempView.dart';
@@ -23,6 +27,14 @@ class ClientCartPage extends StatefulWidget {
   _ClientCartPageState createState() => _ClientCartPageState();
 }
 
+List<String> _items = [];
+Future<List<String>> setUserid() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  _items = pref.getStringList('cart');
+  print("items123: " + _items.toString());
+  return _items;
+}
+
 class _ClientCartPageState extends State<ClientCartPage> {
   bool finishLoad = false;
   bool hasShop = true;
@@ -32,6 +44,7 @@ class _ClientCartPageState extends State<ClientCartPage> {
   List<ItemCartModel> cart;
   @override
   Widget build(BuildContext context) {
+    print("check1234");
     if (!finishLoad) {
       FirebaseFirestore.instance
           .collection("domains")
@@ -57,12 +70,27 @@ class _ClientCartPageState extends State<ClientCartPage> {
     if (!hasShop) {
       return UnknownPage();
     }
-    return Container(
-      child: TemplateView(
-        widgets: ShopProductPage1(
-          productz: product,
-        ),
-      ),
-    );
+
+    return FutureBuilder(
+        future: setUserid(),
+        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+          List<ItemCartModel> models = [];
+          for (String item in _items) {
+            ItemCartModel m = ItemCartModel.fromMap(json.decode(item));
+            models.add(m);
+          }
+          print("models123: " + models.toString());
+
+          if (snapshot.hasData) {
+            return Container(
+              child: TemplateView(
+                widgets: ShopCartPage(
+                  cart: models,
+                ),
+              ),
+            ); // your widget
+          } else
+            return CircularProgressIndicator();
+        });
   }
 }
