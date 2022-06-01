@@ -4,6 +4,7 @@ import 'package:pentagonselllit/Elements/Pages/ClientCollectionPage.dart';
 import 'package:pentagonselllit/Elements/TempView.dart';
 import 'package:pentagonselllit/product_route_pth.dart';
 
+import 'Elements/Pages/ClientCartPage.dart';
 import 'Elements/Pages/ClientHomePage.dart';
 import 'Elements/Pages/ClientPages/ShopProductPage.dart';
 import 'Elements/Pages/ClientPages/ShopProductsPage.dart';
@@ -32,7 +33,9 @@ class ShopRouteInformationParser
         return ProductRoutePath.collection(tags);
       }
     }
-
+    if (uri.pathSegments[0] == "cart") {
+      return ProductRoutePath.cart();
+    }
     if (uri.pathSegments[0] == "collection") {
       return ProductRoutePath.collection([]);
     }
@@ -44,6 +47,8 @@ class ShopRouteInformationParser
   RouteInformation restoreRouteInformation(ProductRoutePath path) {
     print("xyzy2 " + path.isCollection.toString());
 
+    if (path.isCart) return RouteInformation(location: '/cart');
+
     if (path.isCollection && path.tags.length > 0) {
       String builder = "";
       for (String current in path.tags) {
@@ -52,6 +57,7 @@ class ShopRouteInformationParser
       builder = builder.substring(0, builder.length - 1);
       return RouteInformation(location: '/collection/${builder}');
     }
+
     if (path.isCollection) return RouteInformation(location: '/collection');
     if (path.isUnknown) return RouteInformation(location: '/404');
     if (path.isHomePage) return RouteInformation(location: '/');
@@ -69,18 +75,20 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
   bool show404 = false;
   bool isProduct = false;
   bool isCollection = false;
+  bool isCart = false;
 
   @override
   GlobalKey<NavigatorState> get navigatorKey => GlobalKey<NavigatorState>();
 
   @override
   ProductRoutePath get currentConfiguration {
-    print("xyzy10 " + isCollection.toString());
     if (show404) return ProductRoutePath.unknown();
 
     if (_productID == null && !isCollection) return ProductRoutePath.home();
 
     if (isCollection) return ProductRoutePath.collection(tags);
+
+    if (isCart) return ProductRoutePath.cart();
 
     return ProductRoutePath.details(_productID);
   }
@@ -101,6 +109,11 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
           MaterialPage(
             key: ValueKey('ProductPage'),
             child: ClientProductPage(domain: "shop", product_id: _productID),
+          ),
+        if (isCart)
+          MaterialPage(
+            key: ValueKey('CartPage'),
+            child: ClientCartPage(domain: "shop"),
           ),
         if (isCollection)
           MaterialPage(
@@ -145,6 +158,16 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
       _productID = null;
       show404 = true;
       isProduct = false;
+      isCart = false;
+      notifyListeners();
+      return;
+    }
+
+    if (path.isCart) {
+      _productID = null;
+      isCart = true;
+      show404 = false;
+      isProduct = false;
       notifyListeners();
       return;
     }
@@ -152,10 +175,11 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
     if (path.isProductPage) {
       _productID = path.id;
       isProduct = true;
+      isCart = false;
       isCollection = false;
     } else if (path.isCollection) {
-      print("xyzy12");
       tags = path.tags;
+      isCart = false;
       _productID = null;
       isProduct = false;
       isCollection = true;

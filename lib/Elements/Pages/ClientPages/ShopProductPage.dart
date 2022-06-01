@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pentagonselllit/Models/ItemModel.dart';
 import 'package:pentagonselllit/args.dart' as args;
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../Models/ItemCartModel.dart';
@@ -170,21 +172,85 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                 },
                 child: GestureDetector(
                   onTap: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    ItemCartModel model = ItemCartModel(
-                        name: product.name,
-                        price: product.price,
-                        id: product.id,
-                        image1: product.image1,
-                        selected_options: widget.selectedOptions);
-                    String string_model = json.encode(model.toMap());
-                    List<String> items = prefs.getStringList('cart');
-                    if (items == null) {
-                      items = [];
+                    if (widget.selectedOptions.keys.length !=
+                        product.options.length) {
+                      //Alert
+                      Widget okButton = TextButton(
+                        child: Text("אישור"),
+                        onPressed: () {},
+                      );
+
+                      // set up the AlertDialog
+                      //Change the button color by theme
+                      AlertStyle style1 = AlertStyle(
+                          animationType: AnimationType.grow,
+                          titleStyle: TextStyle(fontWeight: FontWeight.bold));
+                      Alert(
+                              context: context,
+                              title: "שגיאה",
+                              desc: "יש לבחור אפשרות אחת מכל קטגוריה",
+                              image: Lottie.asset(
+                                  "../../../../../../../../../../../../../../../assets/error_animation.json",
+                                  repeat: false),
+                              buttons: [
+                                DialogButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("אישור",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16)),
+                                )
+                              ],
+                              style: style1)
+                          .show();
+                    } else {
+                      final prefs = await SharedPreferences.getInstance();
+                      ItemCartModel model = ItemCartModel(
+                          name: product.name,
+                          price: product.price,
+                          id: product.id,
+                          image1: product.image1,
+                          selected_options: widget.selectedOptions);
+                      String string_model = json.encode(model.toMap());
+                      List<String> items = prefs.getStringList('cart');
+                      if (items == null) {
+                        items = [];
+                      }
+                      items.add(string_model);
+                      await prefs.setStringList("cart", items);
+                      print("Cart: " + prefs.getStringList("cart").toString());
+                      AlertStyle style1 = AlertStyle(
+                          animationType: AnimationType.grow,
+                          titleStyle: TextStyle(fontWeight: FontWeight.bold));
+                      Alert(
+                              context: context,
+                              title: "אישור",
+                              desc: "המוצר נוסף בהצלחה לסל הקניות",
+                              image: Lottie.asset(
+                                  "../../../../../../../../../../../../../../../assets/cart_animation.json",
+                                  repeat: true),
+                              buttons: [
+                                DialogButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("המשך קניות",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16)),
+                                ),
+                                DialogButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("סיום הזמנה",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16)),
+                                )
+                              ],
+                              style: style1)
+                          .show();
                     }
-                    items.add(string_model);
-                    await prefs.setStringList("cart", items);
-                    print("Cart: " + prefs.getStringList("cart").toString());
                   },
                   child: Text(
                     "Add to cart",
