@@ -78,23 +78,5 @@ class MyApp extends StatelessWidget {
       routerDelegate: ProductRouterDelegate(),
       routeInformationParser: ShopRouteInformationParser(),
     );
-    return MaterialApp(
-      title: parms[0].toString(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ClientHomePage(domain: "rypersonalshopper"),
-      routes: {
-        '/collection': (BuildContext context) => TemplateView(
-              widgets: ShopProductPageStyle2(context),
-            ),
-      },
-      onUnknownRoute: (RouteSettings settings) {
-        print("UnknownPage resource");
-        return MaterialPageRoute(
-          builder: (BuildContext context) => UnknownPage(),
-        );
-      },
-    );
   }
 }

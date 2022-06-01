@@ -21,71 +21,71 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
   @override
   Widget build(BuildContext context) {
     ItemModel product = widget.productz;
-    print("Options_valid: " + product.options.toString());
-    print("Options_valid: " + product.options.length.toString());
     List<Widget> options = [];
-    for (Map option in product.options) {
-      List<dynamic> values = option[option.keys.elementAt(0)];
-      String option_name = option.keys.elementAt(0);
-      print("option_name: " + option_name);
-      options.add(Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        child: Text(
-          option.keys.elementAt(0),
-          style: GoogleFonts.gidugu(
-            fontSize: 28,
+    if (product.options != null) {
+      for (Map option in product.options) {
+        List<dynamic> values = option[option.keys.elementAt(0)];
+        String option_name = option.keys.elementAt(0);
+        print("option_name: " + option_name);
+        options.add(Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: Text(
+            option.keys.elementAt(0),
+            style: GoogleFonts.gidugu(
+              fontSize: 28,
+            ),
+            textAlign: TextAlign.left,
           ),
-          textAlign: TextAlign.left,
-        ),
-      ));
-      options.add(Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        height: 40,
-        child: GridView.count(
-          crossAxisCount:
-              (MediaQuery.of(context).size.width * 0.9 / 100).toInt(),
-          childAspectRatio: 100 / 40,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          children: List.generate(
-            values.length,
-            (index) {
-              return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      widget.selectedOption[option_name] =
-                          values.elementAt(index);
-                    });
-                  },
-                  child: (widget.selectedOption[option_name] ==
-                          values.elementAt(index))
-                      ? Container(
-                          width: 100,
-                          height: 40,
-                          color: Color.fromRGBO(245, 245, 245, 1),
-                          child: Center(
-                            child: Text(
-                              values[index],
-                              style: TextStyle(color: Colors.black),
+        ));
+        options.add(Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: 40,
+          child: GridView.count(
+            crossAxisCount:
+                (MediaQuery.of(context).size.width * 0.9 / 100).toInt(),
+            childAspectRatio: 100 / 40,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            children: List.generate(
+              values.length,
+              (index) {
+                return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.selectedOption[option_name] =
+                            values.elementAt(index);
+                      });
+                    },
+                    child: (widget.selectedOption[option_name] ==
+                            values.elementAt(index))
+                        ? Container(
+                            width: 100,
+                            height: 40,
+                            color: Color.fromRGBO(245, 245, 245, 1),
+                            child: Center(
+                              child: Text(
+                                values[index],
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ),
-                          ),
-                        )
-                      : Container(
-                          width: 100,
-                          height: 40,
-                          color: Color.fromRGBO(0, 0, 0, 1),
-                          child: Center(
-                            child: Text(
-                              values[index],
-                              style: TextStyle(color: Colors.white),
+                          )
+                        : Container(
+                            width: 100,
+                            height: 40,
+                            color: Color.fromRGBO(0, 0, 0, 1),
+                            child: Center(
+                              child: Text(
+                                values[index],
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
-                          ),
-                        ));
-            },
+                          ));
+              },
+            ),
           ),
-        ),
-      ));
-      options.add(Container(height: 20));
+        ));
+        options.add(Container(height: 20));
+      }
     }
     List<String> si = [];
     for (String size in ["S", "M", "L"]) {
