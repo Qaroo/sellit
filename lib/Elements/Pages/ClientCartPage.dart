@@ -95,19 +95,21 @@ class _ClientCartPageState extends State<ClientCartPage> {
               child: TemplateView(
                 widgets: Column(children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.4,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     width: MediaQuery.of(context).size.width,
                     child: Lottie.asset(
-                        "../../../../../../../../../../../../../../../assets/error_animation.json",
+                        "../../../../../../../../../../../../../../../assets/empty-bag.json",
                         repeat: false),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.6,
                     width: MediaQuery.of(context).size.width,
                     child: Center(
                         child: Text("Cart is Empty",
                             style: TextStyle(fontSize: 30))),
-                  )
+                  ),
+                  Container(
+                    height: 600,
+                  ),
                 ]),
               ),
             );
