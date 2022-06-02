@@ -57,12 +57,14 @@ class _ShopCartPageState extends State<ShopCartPage> {
                         fontSize: 15, color: Color.fromARGB(255, 68, 66, 66)),
                   )),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  child: Stack(
-                    children: [Positioned(right: 10, child: Text("check"))],
-                  ),
-                )
+              ],
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.36,
+            child: Stack(
+              children: [
+                Positioned(right: 10, top: 20, child: Text("Do what you want."))
               ],
             ),
           )
