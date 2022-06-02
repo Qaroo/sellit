@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pentagonselllit/Elements/LoadingIndicator.dart';
 import 'package:pentagonselllit/Elements/Pages/ClientPages/ShopCartPage.dart';
 import 'package:pentagonselllit/Elements/Pages/ClientPages/ShopHomePage.dart';
@@ -74,14 +75,14 @@ class _ClientCartPageState extends State<ClientCartPage> {
     return FutureBuilder(
         future: setUserid(),
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-          List<ItemCartModel> models = [];
-          for (String item in _items) {
-            ItemCartModel m = ItemCartModel.fromMap(json.decode(item));
-            models.add(m);
-          }
-          print("models123: " + models.toString());
+          if (_items != null) {
+            List<ItemCartModel> models = [];
+            for (String item in _items) {
+              ItemCartModel m = ItemCartModel.fromMap(json.decode(item));
+              models.add(m);
+            }
+            print("models123: " + models.toString());
 
-          if (snapshot.hasData) {
             return Container(
               child: TemplateView(
                 widgets: ShopCartPage(
@@ -90,7 +91,26 @@ class _ClientCartPageState extends State<ClientCartPage> {
               ),
             ); // your widget
           } else
-            return CircularProgressIndicator();
+            return Container(
+              child: TemplateView(
+                widgets: Column(children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    width: MediaQuery.of(context).size.width,
+                    child: Lottie.asset(
+                        "../../../../../../../../../../../../../../../assets/error_animation.json",
+                        repeat: false),
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text("Cart is Empty",
+                            style: TextStyle(fontSize: 30))),
+                  )
+                ]),
+              ),
+            );
         });
   }
 }
