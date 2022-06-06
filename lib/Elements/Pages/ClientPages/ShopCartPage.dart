@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +16,10 @@ import "dart:html" as html;
 
 class ShopCartPage extends StatefulWidget {
   List<ItemCartModel> cart;
-  ShopCartPage({Key key, this.cart}) : super(key: key);
+  int shippingPrice, minimumShipping;
+
+  ShopCartPage({Key key, this.cart, this.shippingPrice, this.minimumShipping})
+      : super(key: key);
 
   @override
   _ShopCartPageState createState() => _ShopCartPageState();
@@ -90,17 +94,21 @@ class _ShopCartPageState extends State<ShopCartPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> templates = [];
+    print("Shipping: " + widget.shippingPrice.toString());
     templates.add(Container(
         height: MediaQuery.of(context).size.height * 0.15,
         width: MediaQuery.of(context).size.width,
         child: Center(
             child: Text("Shopping Bag (" + widget.cart.length.toString() + ")",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)))));
-    templates.add(Divider(color: Colors.black));
 
     for (ItemCartModel model in widget.cart) {
       templates.add(card_template(model));
-      templates.add(Divider(color: Colors.black));
+      templates.add(Container(
+        color: Colors.grey.shade500,
+        height: 1,
+        width: MediaQuery.of(context).size.width,
+      ));
     }
 
     return Container(
@@ -111,21 +119,94 @@ class _ShopCartPageState extends State<ShopCartPage> {
           child: Column(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.70,
-                child: Column(
-                  children: templates,
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: templates,
+                  ),
                 ),
               ),
               Container(
-                color: Colors.grey.shade300,
-                height: MediaQuery.of(context).size.height * 0.3,
-              )
+                  color: Color.fromRGBO(250, 250, 250, 1),
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        bottom: 10,
+                        left: 10,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            color: Colors.blue,
+                            child: Center(
+                                child: Text("מעבר לתשלום",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14))),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 20,
+                        right: 10,
+                        child: Text(
+                          "עלות פריטים: " +
+                              "₪" +
+                              get_total(widget.cart).toString(),
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Positioned(
+                        top: 46,
+                        right: 10,
+                        child: Text(
+                          "עלות משלוח: " +
+                              "₪" +
+                              get_shipping(widget).toString(),
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Positioned(
+                        top: 72,
+                        right: 10,
+                        child: Text(
+                          "סך הכל: " +
+                              "₪" +
+                              (get_shipping(widget) + get_total(widget.cart))
+                                  .toString(),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ))
             ],
           ),
         ),
       ),
     );
   }
+}
+
+int get_shipping(ShopCartPage widget) {
+  int total = get_total(widget.cart);
+  int shipping = widget.shippingPrice;
+  int min = widget.minimumShipping;
+  if (total > min) {
+    shipping = 0;
+  }
+  return shipping;
+}
+
+int get_total(List<ItemCartModel> cart) {
+  int total = 0;
+  for (ItemCartModel model in cart) {
+    total += int.parse(model.price);
+  }
+  return total;
 }
 
 void _item_settingsBottomSheet(BuildContext context, ItemCartModel item) {

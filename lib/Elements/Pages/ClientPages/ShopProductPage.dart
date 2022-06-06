@@ -174,6 +174,9 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                 },
                 child: GestureDetector(
                   onTap: () async {
+                    if (product.options == null) {
+                      product.options = [];
+                    }
                     if (widget.selectedOptions.keys.length !=
                         product.options.length) {
                       //Alert

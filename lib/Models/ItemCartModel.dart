@@ -18,6 +18,9 @@ class ItemCartModel {
 
   String get_dotted() {
     String selected_options_string = "";
+    if (selected_options.isEmpty) {
+      return selected_options_string;
+    }
     for (String option in this.selected_options.values) {
       selected_options_string += option + " • ";
     }

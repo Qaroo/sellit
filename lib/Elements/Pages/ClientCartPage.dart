@@ -44,6 +44,7 @@ class _ClientCartPageState extends State<ClientCartPage> {
   bool loadTheme = false;
   ItemModel product = null;
   String shopIDZ = "";
+  int shippingPrice = 0, minimumShipping = 0;
   List<ItemCartModel> cart;
   @override
   Widget build(BuildContext context) {
@@ -54,15 +55,29 @@ class _ClientCartPageState extends State<ClientCartPage> {
           .doc(widget.domain)
           .get()
           .then((event) {
-        setState(() {
-          if (event.data() == null) {
-            print("has no domain named: " + widget.domain);
+        if (event.data() == null) {
+          print("has no domain named: " + widget.domain);
+          setState(() {
             hasShop = false;
             finishLoad = true;
-          } else {
-            finishLoad = true;
-          }
-        });
+          });
+        } else {
+          FirebaseFirestore.instance
+              .collection("sites")
+              .doc(event.data()["shopID"])
+              .get()
+              .then((value) {
+            setState(() {
+              print("Shipping: data " + value.data().toString());
+              shippingPrice =
+                  int.parse(value.data()["shippingPrice"].toString());
+              minimumShipping =
+                  int.parse(value.data()["minimumShipping"].toString());
+              finishLoad = true;
+            });
+          });
+        }
+
         //Check cart options and load them
       });
     }
@@ -83,12 +98,13 @@ class _ClientCartPageState extends State<ClientCartPage> {
               ItemCartModel m = ItemCartModel.fromMap(json.decode(item));
               models.add(m);
             }
-            print("models123: " + models.toString());
 
             return Container(
               child: TemplateView(
                 widgets: ShopCartPage(
                   cart: models,
+                  shippingPrice: shippingPrice,
+                  minimumShipping: minimumShipping,
                 ),
               ),
             ); // your widget
