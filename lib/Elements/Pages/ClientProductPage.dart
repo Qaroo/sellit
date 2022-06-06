@@ -35,30 +35,38 @@ class _ClientProductPageState extends State<ClientProductPage> {
       FirebaseFirestore.instance
           .collection("domains")
           .doc(widget.domain)
-          .snapshots()
-          .listen((event) {
-        setState(() {
-          if (event.data() == null) {
-            print("has no domain named: " + widget.domain);
-            hasShop = false;
-            finishLoad = true;
-          }
-        });
+          .get()
+          .then((event) {
+        if (event.data() == null) {
+          print("has no domain named: " + widget.domain);
+          hasShop = false;
+          finishLoad = true;
+        }
         String shopID = event.data()["shopID"].toString();
-        FirebaseFirestore.instance
-            .collection("sites")
-            .doc(shopID)
-            .collection("items")
-            .doc(widget.product_id)
-            .get()
-            .then((value) {
+        ItemModel maybe = args.getProduct(widget.product_id);
+        if (maybe == null) {
+          FirebaseFirestore.instance
+              .collection("sites")
+              .doc(shopID)
+              .collection("items")
+              .doc(widget.product_id)
+              .get()
+              .then((value) {
+            setState(() {
+              print("didnt load: loaded");
+              finishLoad = true;
+              product = ItemModel.fromMap(value.data());
+              hasShop = true;
+            });
+          });
+        } else {
           setState(() {
-            print("Produt page value: " + value.data().toString());
+            print("didnt load");
             finishLoad = true;
-            product = ItemModel.fromMap(value.data());
+            product = maybe;
             hasShop = true;
           });
-        });
+        }
       });
     }
 

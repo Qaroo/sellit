@@ -32,26 +32,6 @@ class MyApp extends StatelessWidget {
     optionsz.add({
       "Size": ['S', 'M']
     });
-    args.products = [
-      ItemModel(
-        name: "x",
-        brand: "x",
-        price: "500",
-        image1:
-            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=80",
-        category: "abc",
-        gender: "x",
-        description: "x",
-        id: "001",
-        options: optionsz,
-      )
-    ];
-    List<ItemModel> xxx = [];
-    Future<QuerySnapshot> snapshot3 = FirebaseFirestore.instance
-        .collection("sites")
-        .document("check")
-        .collection("items")
-        .getDocuments();
 
     URL = url
         .toString()

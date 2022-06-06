@@ -10,6 +10,8 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../Models/ItemCartModel.dart';
+import '../../../product_route_pth.dart';
+import '../../../route.dart';
 import '../../ProductsStyles.dart';
 
 class ShopProductPage1 extends StatefulWidget {
@@ -229,7 +231,7 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                               desc: "המוצר נוסף בהצלחה לסל הקניות",
                               image: Lottie.asset(
                                   "../../../../../../../../../../../../../../../assets/cart_animation.json",
-                                  repeat: true),
+                                  repeat: false),
                               buttons: [
                                 DialogButton(
                                   onPressed: () {
@@ -241,7 +243,10 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                                 ),
                                 DialogButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                    (Router.of(context).routerDelegate
+                                            as ProductRouterDelegate)
+                                        .setNewRoutePath(
+                                            ProductRoutePath.cart());
                                   },
                                   child: Text("סיום הזמנה",
                                       style: TextStyle(

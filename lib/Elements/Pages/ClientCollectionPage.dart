@@ -31,20 +31,12 @@ class _ClientCollectionPageState extends State<ClientCollectionPage> {
   String shopIDZ = "";
   @override
   Widget build(BuildContext context) {
-    print("hdsadas2");
-    FirebaseFirestore.instance
-        .collection("sites")
-        .doc("pentagon")
-        .snapshots()
-        .listen((event) {
-      print("hdsadas");
-    });
     if (!finishLoad) {
       FirebaseFirestore.instance
           .collection("domains")
           .doc(widget.domain)
-          .snapshots()
-          .listen((event) {
+          .get()
+          .then((event) {
         setState(() {
           if (event.data() == null) {
             print("has no domain named: " + widget.domain);
@@ -56,13 +48,14 @@ class _ClientCollectionPageState extends State<ClientCollectionPage> {
         print("shoppppID: " + shopID);
         totalShopID = shopID;
         print("has shop: " + hasShop.toString());
-        if (items.isEmpty && hasShop) {
-          print("start ");
+        if (args.products.length == 0 && hasShop) {
+          print("length: " + (args.products.length == 0).toString());
+          print("length: " + args.products.length.toString());
           Future<QuerySnapshot> snapshot2 = FirebaseFirestore.instance
               .collection("sites")
               .document(totalShopID)
               .collection("items")
-              .getDocuments();
+              .get();
 
           snapshot2.then((snap) {
             List<ItemModel> now = [];
@@ -86,8 +79,7 @@ class _ClientCollectionPageState extends State<ClientCollectionPage> {
               }
             });
             setState(() {
-              print("snap: " + snap.docs.length.toString());
-              print("finish " + totalShopID);
+              print("didnt load: loaded 3 " + args.products.length.toString());
               finishLoad = true;
               if (snap.docs.length == 0) {
                 hasShop = false;
@@ -99,6 +91,12 @@ class _ClientCollectionPageState extends State<ClientCollectionPage> {
                 return TemplateView(widgets: ShopProductPageStyle2(context));
               }
             });
+          });
+        } else {
+          setState(() {
+            print("didnt load 3");
+            finishLoad = true;
+            items = args.products;
           });
         }
       });

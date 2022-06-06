@@ -44,10 +44,16 @@ Widget AssosAppBar(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(
-                  Icons.shopping_bag_outlined,
-                  size: 26,
-                ),
+                IconButton(
+                    icon: Icon(
+                      Icons.shopping_bag_outlined,
+                      size: 26,
+                    ),
+                    onPressed: () {
+                      (Router.of(context).routerDelegate
+                              as ProductRouterDelegate)
+                          .setNewRoutePath(ProductRoutePath.cart());
+                    }),
                 Container(
                   width: 5,
                 ),
@@ -57,7 +63,6 @@ Widget AssosAppBar(
                     size: 26,
                   ),
                   onTap: () {
-                    print("open drawer ");
                     globalKey.currentState.openDrawer();
                   },
                 ),

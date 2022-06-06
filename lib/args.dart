@@ -8,7 +8,18 @@ import 'Models/ItemModel.dart';
 import 'dart:html' as html;
 
 List<ItemModel> products = [];
+List<Widget> HomePage = [];
 
+ItemModel getProduct(String id) {
+  for (ItemModel model in products) {
+    if (model.id == id) {
+      return model;
+    }
+  }
+  return null;
+}
+
+String shopID = "";
 tapped(BuildContext context, ontap_val) {
   print("ontapz");
   print("ontapz: " + ontap_val);

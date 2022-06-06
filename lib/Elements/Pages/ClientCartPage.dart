@@ -32,7 +32,9 @@ List<String> _items = [];
 Future<List<String>> setUserid() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   _items = pref.getStringList('cart');
-  print("items123: " + _items.toString());
+  if (_items.length == 0) {
+    _items = null;
+  }
   return _items;
 }
 
@@ -50,8 +52,8 @@ class _ClientCartPageState extends State<ClientCartPage> {
       FirebaseFirestore.instance
           .collection("domains")
           .doc(widget.domain)
-          .snapshots()
-          .listen((event) {
+          .get()
+          .then((event) {
         setState(() {
           if (event.data() == null) {
             print("has no domain named: " + widget.domain);
@@ -99,7 +101,7 @@ class _ClientCartPageState extends State<ClientCartPage> {
                     width: MediaQuery.of(context).size.width,
                     child: Lottie.asset(
                         "../../../../../../../../../../../../../../../assets/empty-bag.json",
-                        repeat: false),
+                        repeat: true),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,

@@ -45,17 +45,15 @@ class _ShopHomePageState extends State<ShopHomePage> {
 
     String newsLine = "News line - Type whatever you want";
 
-    snapshot2.listen((event) {
-      if (event.data().containsKey("newsLine")) {
-        if (event.data()["newsLine"] != null) {
-          setState(() {
-            newsLine = event.data()["newsLine"];
-          });
-        }
-      }
-    });
-
     if (!loadTheme) {
+      snapshot2.listen((event) {
+        if (event.data().containsKey("newsLine")) {
+          if (event.data()["newsLine"] != null) {
+            newsLine = event.data()["newsLine"];
+            print("Data: newsline");
+          }
+        }
+      });
       List<ItemModel> xxx = [];
       Future<QuerySnapshot> snapshot3 = FirebaseFirestore.instance
           .collection("sites")
@@ -121,6 +119,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
           ));
           now.add(AssosBottomBar(context));
           setState(() {
+            print("Data: Restart state");
             widgets = now;
             loadTheme = true;
           });
