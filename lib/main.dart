@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         .replaceAll("/", "");
     parms = URL.split(".");
     print(parms[0].toString());
-    if (parms[0] == "selllit" || parms[0] == "selllit-genius") {
+    if (parms[0] == "selllit" || parms[0] == "selllitgenius") {
       return MaterialApp(
         title: "Selllit",
         theme: ThemeData(

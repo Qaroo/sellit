@@ -53,8 +53,6 @@ class _ShopCartPageState extends State<ShopCartPage> {
                   ),
                 ),
                 Container(
-                  height:
-                      ((MediaQuery.of(context).size.height * 0.85) / 4.8) * 0.6,
                   child: Flexible(
                       child: Text(
                     model.get_dotted(),
