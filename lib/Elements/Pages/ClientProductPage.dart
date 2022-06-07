@@ -32,42 +32,16 @@ class _ClientProductPageState extends State<ClientProductPage> {
   @override
   Widget build(BuildContext context) {
     if (!finishLoad) {
-      FirebaseFirestore.instance
-          .collection("domains")
-          .doc(widget.domain)
-          .get()
-          .then((event) {
-        if (event.data() == null) {
-          print("has no domain named: " + widget.domain);
-          hasShop = false;
-          finishLoad = true;
-        }
-        String shopID = event.data()["shopID"].toString();
-        ItemModel maybe = args.getProduct(widget.product_id);
-        if (maybe == null) {
-          FirebaseFirestore.instance
-              .collection("sites")
-              .doc(shopID)
-              .collection("items")
-              .doc(widget.product_id)
-              .get()
-              .then((value) {
+      if (!args.products.isEmpty && args.shopID != "") {
+        for (ItemModel model in args.products) {
+          if (model.id == widget.product_id) {
             setState(() {
-              print("didnt load: loaded");
+              product = model;
               finishLoad = true;
-              product = ItemModel.fromMap(value.data());
-              hasShop = true;
             });
-          });
-        } else {
-          setState(() {
-            print("didnt load");
-            finishLoad = true;
-            product = maybe;
-            hasShop = true;
-          });
+          }
         }
-      });
+      }
     }
 
     if (!finishLoad) {

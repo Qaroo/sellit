@@ -32,6 +32,9 @@ class _ClientHomePageState extends State<ClientHomePage> {
     if (!args.Menu.isEmpty) {
       loadMenu = true;
     }
+    if (args.shopID != "" && !args.products.isEmpty) {
+      finishLoad = true;
+    }
     if (!finishLoad) {
       FirebaseFirestore.instance
           .collection("domains")
@@ -56,6 +59,8 @@ class _ClientHomePageState extends State<ClientHomePage> {
               .then((snap) {
             List<ItemModel> now = [];
             snap.docs.forEach((element) {
+              print("Load item");
+
               ItemModel item = ItemModel.fromMap(element.data());
               now.add(item);
             });
@@ -91,6 +96,8 @@ class _ClientHomePageState extends State<ClientHomePage> {
           .doc(args.shopID)
           .get()
           .then((siteSettings) {
+        print("Load settings");
+
         String menuType = siteSettings.data()["menuType"];
         args.menuType = menuType;
         args.menuLogo = siteSettings.data()["menuLogo"];
@@ -101,6 +108,8 @@ class _ClientHomePageState extends State<ClientHomePage> {
             .collection("menu")
             .get()
             .then((value) {
+          print("Load menu");
+
           if (menuType == "category") {
             List<SidebarCategoryModel> menu = [];
             value.docs.forEach((element) {
@@ -115,6 +124,16 @@ class _ClientHomePageState extends State<ClientHomePage> {
             List<SidebarCategoryImageModel> menu = [];
             value.docs.forEach((element) {
               menu.add(SidebarCategoryImageModel.fromMap(element.data()));
+            });
+            args.Menu = menu;
+            setState(() {
+              loadMenu = true;
+            });
+          }
+          if (menuType == "container") {
+            List<SidebarCategoryContainerModel> menu = [];
+            value.docs.forEach((element) {
+              menu.add(SidebarCategoryContainerModel.fromMap(element.data()));
             });
             args.Menu = menu;
             setState(() {

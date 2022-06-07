@@ -24,6 +24,7 @@ class SidebarCategoryContainerModel {
         textPadding: map["textPadding"],
         bgColor: map["bgColor"],
         textColor: map["textColor"],
+        fontSize: map["fontSize"],
         radius: map["radius"],
         ontap: map["ontap"]);
   }
@@ -36,6 +37,7 @@ class SidebarCategoryContainerModel {
         height: snap["height"],
         imagePadding: snap["imagePadding"],
         textPadding: snap["textPadding"],
+        fontSize: snap["fontSize"],
         bgColor: snap["bgColor"],
         textColor: snap["textColor"],
         radius: snap["radius"],
@@ -51,6 +53,7 @@ class SidebarCategoryContainerModel {
       this.imagePadding,
       this.textPadding,
       this.radius,
+      this.fontSize,
       this.ontap,
       this.icon});
 }

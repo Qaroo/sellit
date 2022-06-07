@@ -6,7 +6,7 @@ import 'package:pentagonselllit/Elements/Pages/ClientCollectionPage.dart';
 import 'package:pentagonselllit/Models/sidebar/SidebarCategoryConatinerModel.dart';
 import 'package:pentagonselllit/Models/sidebar/SidebarCategoryImageModel.dart';
 import 'package:pentagonselllit/route.dart';
-
+import 'package:pentagonselllit/args.dart' as args;
 import '../../../../Models/sidebar/SidebarCategoryModel.dart';
 
 class sidebar_mobile_style3 {
@@ -14,7 +14,8 @@ class sidebar_mobile_style3 {
 
   action(String ontap) {}
 
-  Widget getStyle(List<SidebarCategoryContainerModel> categories, bool logo) {
+  Widget getStyle(BuildContext context,
+      List<SidebarCategoryContainerModel> categories, bool logo) {
     List<Widget> page = [];
     if (logo == true) {
       page += [
@@ -54,7 +55,7 @@ class sidebar_mobile_style3 {
       if (text_rightPadding == -1) text_rightPadding = null;
       if (text_bottomPadding == -1) text_bottomPadding = null;
 
-      List<String> iconpaddings = model.textPadding.split(",");
+      List<String> iconpaddings = model.imagePadding.split(",");
       double icon_leftPadding = double.parse(iconpaddings[0]);
       double icon_topPadding = double.parse(iconpaddings[1]);
       double icon_rightPadding = double.parse(iconpaddings[2]);
@@ -69,44 +70,49 @@ class sidebar_mobile_style3 {
           padding: EdgeInsets.all(model.padding),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(model.radius),
-            child: Container(
-              color: Color.fromRGBO(
-                int.parse(model.bgColor.split(",")[0]),
-                int.parse(model.bgColor.split(",")[1]),
-                int.parse(model.bgColor.split(",")[2]),
-                double.parse(model.bgColor.split(",")[3]),
-              ),
-              height: model.height,
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: text_topPadding,
-                    right: text_rightPadding,
-                    left: text_leftPadding,
-                    bottom: text_bottomPadding,
-                    child: Text(model.text,
-                        style: GoogleFonts.ubuntu(
-                          fontSize: model.fontSize,
-                          color: Color.fromRGBO(
-                            int.parse(model.textColor.split(",")[0]),
-                            int.parse(model.textColor.split(",")[1]),
-                            int.parse(model.textColor.split(",")[2]),
-                            double.parse(model.textColor.split(",")[3]),
+            child: GestureDetector(
+              onTap: () {
+                args.tapped(context, model.ontap);
+              },
+              child: Container(
+                color: Color.fromRGBO(
+                  int.parse(model.bgColor.split(",")[0]),
+                  int.parse(model.bgColor.split(",")[1]),
+                  int.parse(model.bgColor.split(",")[2]),
+                  double.parse(model.bgColor.split(",")[3]),
+                ),
+                height: model.height,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: text_topPadding,
+                      right: text_rightPadding,
+                      left: text_leftPadding,
+                      bottom: text_bottomPadding,
+                      child: Text(model.text,
+                          style: GoogleFonts.ubuntu(
+                            fontSize: model.fontSize,
+                            color: Color.fromRGBO(
+                              int.parse(model.textColor.split(",")[0]),
+                              int.parse(model.textColor.split(",")[1]),
+                              int.parse(model.textColor.split(",")[2]),
+                              double.parse(model.textColor.split(",")[3]),
+                            ),
                           ),
-                        ),
-                        textAlign: TextAlign.center),
-                  ),
-                  Positioned(
-                    top: icon_topPadding,
-                    right: icon_rightPadding,
-                    left: icon_leftPadding,
-                    bottom: icon_bottomPadding,
-                    child: Image.network(
-                      model.icon,
-                      height: model.height,
+                          textAlign: TextAlign.center),
                     ),
-                  ),
-                ],
+                    Positioned(
+                      top: icon_topPadding,
+                      right: icon_rightPadding,
+                      left: icon_leftPadding,
+                      bottom: icon_bottomPadding,
+                      child: Image.network(
+                        model.icon,
+                        height: model.height,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

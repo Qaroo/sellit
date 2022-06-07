@@ -25,7 +25,13 @@ class NormalSideBar extends StatelessWidget {
     }
     if (args.menuType == "image") {
       return Drawer(
-          child: sidebar_mobile_style2().getStyle(args.Menu, args.menuLogo));
+          child: sidebar_mobile_style2()
+              .getStyle(context, args.Menu, args.menuLogo));
+    }
+    if (args.menuType == "container") {
+      return Drawer(
+          child: sidebar_mobile_style3()
+              .getStyle(context, args.Menu, args.menuLogo));
     }
     return Drawer();
   }

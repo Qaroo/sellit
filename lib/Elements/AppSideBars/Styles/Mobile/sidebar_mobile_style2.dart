@@ -5,15 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pentagonselllit/Elements/Pages/ClientCollectionPage.dart';
 import 'package:pentagonselllit/Models/sidebar/SidebarCategoryImageModel.dart';
 import 'package:pentagonselllit/route.dart';
+import 'package:pentagonselllit/args.dart' as args;
 
 import '../../../../Models/sidebar/SidebarCategoryModel.dart';
 
 class sidebar_mobile_style2 {
-  //This is a "assos" style, images instead of text.
-
-  action(String ontap) {}
-
-  Widget getStyle(List<SidebarCategoryImageModel> categories, bool logo) {
+  Widget getStyle(BuildContext context,
+      List<SidebarCategoryImageModel> categories, bool logo) {
     List<Widget> page = [];
     if (logo == true) {
       page += [
@@ -48,7 +46,11 @@ class sidebar_mobile_style2 {
             padding: EdgeInsets.all(model.padding),
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(model.radius),
-                child: Image.network(model.url)))
+                child: GestureDetector(
+                    onTap: () {
+                      args.tapped(context, model.ontap);
+                    },
+                    child: Image.network(model.url))))
       ];
     }
     page.add(

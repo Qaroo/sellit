@@ -32,61 +32,11 @@ class _ClientCollectionPageState extends State<ClientCollectionPage> {
   @override
   Widget build(BuildContext context) {
     if (!finishLoad) {
-      FirebaseFirestore.instance
-          .collection("domains")
-          .doc(widget.domain)
-          .get()
-          .then((event) {
+      if (!args.products.isEmpty && args.shopID != "") {
         setState(() {
-          if (event.data() == null) {
-            print("has no domain named: " + widget.domain);
-            hasShop = false;
-            finishLoad = true;
-          }
+          finishLoad = true;
         });
-        String shopID = event.data()["shopID"].toString();
-        print("shoppppID: " + shopID);
-        totalShopID = shopID;
-        print("has shop: " + hasShop.toString());
-        if (args.products.length == 0 && hasShop) {
-          print("length: " + (args.products.length == 0).toString());
-          print("length: " + args.products.length.toString());
-          Future<QuerySnapshot> snapshot2 = FirebaseFirestore.instance
-              .collection("sites")
-              .document(totalShopID)
-              .collection("items")
-              .get();
-
-          snapshot2.then((snap) {
-            List<ItemModel> now = [];
-            snap.docs.forEach((element) {
-              print("tagsz: " + widget.tags.toString());
-              ItemModel item = ItemModel.fromMap(element.data());
-              now.add(item);
-            });
-            setState(() {
-              print("didnt load: loaded 3 " + args.products.length.toString());
-              finishLoad = true;
-              if (snap.docs.length == 0) {
-                hasShop = false;
-                print("has no shopID");
-              } else {
-                items = now;
-                args.products = items;
-                shopIDZ = shopID;
-                return TemplateView(
-                    widgets: ShopProductPageStyle2(context, widget.tags));
-              }
-            });
-          });
-        } else {
-          setState(() {
-            print("didnt load 3");
-            finishLoad = true;
-            items = args.products;
-          });
-        }
-      });
+      }
     }
     if (!finishLoad) {
       return loading_indicator(context);
