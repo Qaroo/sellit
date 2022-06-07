@@ -26,7 +26,6 @@ Widget AssosAppBar(
                 ),
                 GestureDetector(
                   onTap: () {
-                    print("xyzyz2home");
                     (Router.of(context).routerDelegate as ProductRouterDelegate)
                         .setNewRoutePath(ProductRoutePath.home());
                   },

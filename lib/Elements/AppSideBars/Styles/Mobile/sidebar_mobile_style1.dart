@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pentagonselllit/Elements/Pages/ClientCollectionPage.dart';
 import 'package:pentagonselllit/route.dart';
+import 'package:pentagonselllit/args.dart' as args;
 
 import '../../../../Models/sidebar/SidebarCategoryModel.dart';
 
@@ -12,7 +13,7 @@ class sidebar_mobile_style1 {
 
   action(String ontap) {}
 
-  List<Widget> getRow(SidebarCategoryModel category) {
+  List<Widget> getRow(BuildContext context, SidebarCategoryModel category) {
     if (category.childs == null) {
       return [
         GestureDetector(
@@ -24,6 +25,9 @@ class sidebar_mobile_style1 {
             child: ListTile(
               title:
                   Text(category.title, style: GoogleFonts.inter(fontSize: 18)),
+              onTap: () {
+                args.tapped(context, category.ontap);
+              },
             ),
           ),
         )
@@ -32,7 +36,7 @@ class sidebar_mobile_style1 {
       List<Widget> subsub = [];
 
       for (SidebarCategoryModel subcategory in category.childs) {
-        subsub += getRow(subcategory);
+        subsub += getRow(context, subcategory);
       }
       Widget listile = Padding(
           padding: EdgeInsets.all(8),
@@ -45,7 +49,8 @@ class sidebar_mobile_style1 {
     }
   }
 
-  Widget getStyle(List<SidebarCategoryModel> categories, bool logo) {
+  Widget getStyle(
+      BuildContext context, List<SidebarCategoryModel> categories, bool logo) {
     List<Widget> page = [];
     if (logo == true) {
       page += [
@@ -76,7 +81,7 @@ class sidebar_mobile_style1 {
     }
 
     for (SidebarCategoryModel category in categories) {
-      page += getRow(category);
+      page += getRow(context, category);
     }
     page.add(
       Divider(

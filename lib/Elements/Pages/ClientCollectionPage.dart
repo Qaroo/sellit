@@ -62,21 +62,7 @@ class _ClientCollectionPageState extends State<ClientCollectionPage> {
             snap.docs.forEach((element) {
               print("tagsz: " + widget.tags.toString());
               ItemModel item = ItemModel.fromMap(element.data());
-              bool valid = true;
-              if (widget.tags.length > 0) {
-                if (item.tags != null) {
-                  for (String current_tag in widget.tags) {
-                    if (!item.tags.contains(current_tag)) {
-                      valid = false;
-                    }
-                  }
-                  if (valid) {
-                    now.add(item);
-                  }
-                }
-              } else {
-                now.add(item);
-              }
+              now.add(item);
             });
             setState(() {
               print("didnt load: loaded 3 " + args.products.length.toString());
@@ -88,7 +74,8 @@ class _ClientCollectionPageState extends State<ClientCollectionPage> {
                 items = now;
                 args.products = items;
                 shopIDZ = shopID;
-                return TemplateView(widgets: ShopProductPageStyle2(context));
+                return TemplateView(
+                    widgets: ShopProductPageStyle2(context, widget.tags));
               }
             });
           });
@@ -109,7 +96,7 @@ class _ClientCollectionPageState extends State<ClientCollectionPage> {
       return UnknownPage();
     }
     return Container(
-      child: TemplateView(widgets: ShopProductPageStyle2(context)),
+      child: TemplateView(widgets: ShopProductPageStyle2(context, widget.tags)),
     );
   }
 }

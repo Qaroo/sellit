@@ -18,8 +18,27 @@ Widget FilterTile(BuildContext context, String text) {
 }
 
 //Style 2:
-Widget ShopProductPageStyle2(BuildContext context) {
+Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
   print("COllection product:" + args.products.toString());
+  List<ItemModel> items_to_show = [];
+  for (ItemModel item in args.products) {
+    bool valid = true;
+    if (tags.length > 0) {
+      if (item.tags != null) {
+        for (String current_tag in tags) {
+          if (!item.tags.contains(current_tag)) {
+            valid = false;
+          }
+        }
+        if (valid) {
+          items_to_show.add(item);
+        }
+      }
+    } else {
+      items_to_show.add(item);
+    }
+  }
+
   if (MediaQuery.of(context).size.width < MediaQuery.of(context).size.height) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -37,15 +56,15 @@ Widget ShopProductPageStyle2(BuildContext context) {
               childAspectRatio: (MediaQuery.of(context).size.width * 0.95 / 2) /
                   (MediaQuery.of(context).size.height * 0.5 + 11),
               children: List.generate(
-                args.products.length,
+                items_to_show.length,
                 (index) => GestureDetector(
                   onTap: () {
                     (Router.of(context).routerDelegate as ProductRouterDelegate)
                         .setNewRoutePath(
-                            ProductRoutePath.details(args.products[index].id));
+                            ProductRoutePath.details(items_to_show[index].id));
                   },
                   child: ProductStyle1(
-                      args.products[index],
+                      items_to_show[index],
                       MediaQuery.of(context).size.height * 0.5,
                       MediaQuery.of(context).size.width * 0.95 / 2,
                       20),
@@ -74,84 +93,14 @@ Widget ShopProductPageStyle2(BuildContext context) {
             childAspectRatio: (MediaQuery.of(context).size.width * 0.8 / 3) /
                 (MediaQuery.of(context).size.height * 0.5 + 11),
             children: List.generate(
-              args.products.length,
+              items_to_show.length,
               (index) => ProductStyle1(
-                  args.products[index],
+                  items_to_show[index],
                   MediaQuery.of(context).size.height * 0.5,
                   MediaQuery.of(context).size.width * 0.8 / 3,
                   20),
             ),
           ),
-        ),
-      ),
-    ),
-  );
-}
-
-//Style 1
-Widget ShopProductPageStyle1(BuildContext context) {
-  return Center(
-    child: Container(
-      width: 1400,
-      color: Colors.white,
-      child: Center(
-        child: Column(
-          children: [
-            Container(
-              height: 20,
-            ),
-            Text("CURRENT REFINE",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.acme(
-                    fontSize: 40, fontWeight: FontWeight.bold)),
-            Container(
-              height: 5,
-            ),
-            Text("THIS PAGE INCLUDE: CLOTHING, SNEAKERS & MORE",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.acme(fontSize: 22)),
-            Container(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Container(width: 20),
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: 280,
-                  color: Colors.white,
-                  child: ListView.builder(
-                    itemCount: 12,
-                    itemBuilder: (BuildContext context, int index) {
-                      return FilterTile(
-                          context, "Category " + (index + 1).toString());
-                    },
-                  ),
-                ),
-                Container(width: 10),
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: 1100,
-                  color: Colors.white,
-                  child: GridView.count(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: (1100 / 3) /
-                        (MediaQuery.of(context).size.height * 0.5 + 11),
-                    children: List.generate(
-                      args.products.length,
-                      (index) => ProductStyle1(
-                          args.products[index],
-                          MediaQuery.of(context).size.height * 0.5,
-                          1100 / 3,
-                          20),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
         ),
       ),
     ),

@@ -5,10 +5,12 @@ import 'package:pentagonselllit/Elements/LoadingIndicator.dart';
 import 'package:pentagonselllit/Elements/Pages/ClientPages/ShopHomePage.dart';
 import 'package:pentagonselllit/Elements/Pages/UnknownPage.dart';
 import 'package:pentagonselllit/Models/ItemModel.dart';
+import 'package:pentagonselllit/Models/sidebar/SidebarCategoryConatinerModel.dart';
+import 'package:pentagonselllit/Models/sidebar/SidebarCategoryImageModel.dart';
+import 'package:pentagonselllit/Models/sidebar/SidebarCategoryModel.dart';
 import 'package:pentagonselllit/args.dart' as args;
 
 List<ItemModel> itemsCollection;
-String totalShopID;
 
 class ClientHomePage extends StatefulWidget {
   String domain;
@@ -22,25 +24,20 @@ class _ClientHomePageState extends State<ClientHomePage> {
   bool finishLoad = false;
   bool hasShop = true;
   bool loadTheme = false;
+  bool loadMenu = false;
   List<ItemModel> items = [];
   List<Widget> widgets = [];
-  String shopIDZ = "";
   @override
   Widget build(BuildContext context) {
-    print("hdsadas2");
-    FirebaseFirestore.instance
-        .collection("sites")
-        .doc("pentagon")
-        .snapshots()
-        .listen((event) {
-      print("hdsadas");
-    });
+    if (!args.Menu.isEmpty) {
+      loadMenu = true;
+    }
     if (!finishLoad) {
       FirebaseFirestore.instance
           .collection("domains")
           .doc(widget.domain)
-          .snapshots()
-          .listen((event) {
+          .get()
+          .then((event) {
         setState(() {
           if (event.data() == null) {
             print("has no domain named: " + widget.domain);
@@ -49,39 +46,34 @@ class _ClientHomePageState extends State<ClientHomePage> {
           }
         });
         String shopID = event.data()["shopID"].toString();
-        print("shoppppID: " + shopID);
-        totalShopID = shopID;
-        print("has shop: " + hasShop.toString());
-        if (items.isEmpty && hasShop) {
-          print("start ");
-          Future<QuerySnapshot> snapshot2 = FirebaseFirestore.instance
+        args.shopID = shopID;
+        if (args.products.isEmpty && hasShop) {
+          FirebaseFirestore.instance
               .collection("sites")
-              .document(totalShopID)
+              .doc(args.shopID)
               .collection("items")
-              .getDocuments();
-
-          snapshot2.then((snap) {
+              .get()
+              .then((snap) {
             List<ItemModel> now = [];
             snap.docs.forEach((element) {
               ItemModel item = ItemModel.fromMap(element.data());
-              if (element.data()['sizes'] != null)
-                item.sizes = element.data()['sizes'];
               now.add(item);
             });
             setState(() {
-              print("snap: " + snap.docs.length.toString());
-              print("finish " + totalShopID);
               finishLoad = true;
               if (snap.docs.length == 0) {
                 hasShop = false;
-                print("has no shopID");
               } else {
                 items = now;
                 args.products = items;
-                shopIDZ = shopID;
                 return ShopHomePage(shopID: shopID);
               }
             });
+          });
+        } else {
+          setState(() {
+            finishLoad = true;
+            hasShop = true;
           });
         }
       });
@@ -93,8 +85,48 @@ class _ClientHomePageState extends State<ClientHomePage> {
       print('unknownnnn');
       return UnknownPage();
     }
+    if (finishLoad && !loadMenu) {
+      FirebaseFirestore.instance
+          .collection("sites")
+          .doc(args.shopID)
+          .get()
+          .then((siteSettings) {
+        String menuType = siteSettings.data()["menuType"];
+        args.menuType = menuType;
+        args.menuLogo = siteSettings.data()["menuLogo"];
+
+        FirebaseFirestore.instance
+            .collection("sites")
+            .doc(args.shopID)
+            .collection("menu")
+            .get()
+            .then((value) {
+          if (menuType == "category") {
+            List<SidebarCategoryModel> menu = [];
+            value.docs.forEach((element) {
+              menu.add(SidebarCategoryModel.fromMap(element.data()));
+            });
+            args.Menu = menu;
+            setState(() {
+              loadMenu = true;
+            });
+          }
+          if (menuType == "image") {
+            List<SidebarCategoryImageModel> menu = [];
+            value.docs.forEach((element) {
+              menu.add(SidebarCategoryImageModel.fromMap(element.data()));
+            });
+            args.Menu = menu;
+            setState(() {
+              loadMenu = true;
+            });
+          }
+        });
+      });
+    }
+
     return Container(
-      child: ShopHomePage(shopID: shopIDZ),
+      child: ShopHomePage(shopID: args.shopID),
     );
   }
 }

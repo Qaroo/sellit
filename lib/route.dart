@@ -98,9 +98,7 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
 
   @override
   Widget build(BuildContext context) {
-    //for (ItemModel item in args.products) {
-    //  if (item.id == _productID) product = item;
-    //}
+    print("Tags build: " + tags.toString());
     return Navigator(
       key: navigatorKey,
       pages: [
@@ -144,11 +142,10 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
 
   @override
   Future<void> setNewRoutePath(ProductRoutePath path) async {
-    print("xyzy5 " + path.isProductPage.toString());
-
     isProduct = path.isProductPage;
 
     if (path.isHomePage) {
+      isCart = false;
       isCollection = false;
       _productID = null;
       show404 = false;
@@ -159,6 +156,7 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
     print("xyzy Continue");
 
     if (path.isUnknown) {
+      isCollection = false;
       _productID = null;
       show404 = true;
       isProduct = false;
@@ -168,6 +166,7 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
     }
 
     if (path.isCart) {
+      isCollection = false;
       _productID = null;
       isCart = true;
       show404 = false;
@@ -181,14 +180,18 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
       isProduct = true;
       isCart = false;
       isCollection = false;
+      show404 = false;
+      notifyListeners();
     } else if (path.isCollection) {
       tags = path.tags;
       isCart = false;
       _productID = null;
       isProduct = false;
       isCollection = true;
+      notifyListeners();
     } else {
       _productID = null;
+      notifyListeners();
     }
 
     show404 = false;

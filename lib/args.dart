@@ -9,6 +9,9 @@ import 'dart:html' as html;
 
 List<ItemModel> products = [];
 List<Widget> HomePage = [];
+List<dynamic> Menu = [];
+String menuType = "";
+bool menuLogo = false;
 
 ItemModel getProduct(String id) {
   for (ItemModel model in products) {
@@ -33,6 +36,7 @@ tapped(BuildContext context, ontap_val) {
         {
           if (ontap_val.contains("collection:")) {
             List<String> tags = ontap_val.split(":")[2].split(",");
+            print("tags: " + tags.toString());
             (Router.of(context).routerDelegate as ProductRouterDelegate)
                 .setNewRoutePath(ProductRoutePath.collection(tags));
           } else {
@@ -43,7 +47,8 @@ tapped(BuildContext context, ontap_val) {
         break;
       case "cart":
         {
-          //we dont have cart yet.
+          (Router.of(context).routerDelegate as ProductRouterDelegate)
+              .setNewRoutePath(ProductRoutePath.cart());
         }
         break;
       case "product":
@@ -52,6 +57,13 @@ tapped(BuildContext context, ontap_val) {
           (Router.of(context).routerDelegate as ProductRouterDelegate)
               .setNewRoutePath(ProductRoutePath.details(productID));
         }
+        break;
+      case "home":
+        {
+          (Router.of(context).routerDelegate as ProductRouterDelegate)
+              .setNewRoutePath(ProductRoutePath.home());
+        }
+        break;
     }
   }
 }

@@ -6,8 +6,16 @@ class SidebarCategoryModel {
   List<SidebarCategoryModel> childs;
 
   factory SidebarCategoryModel.fromMap(Map<String, dynamic> map) {
+    List<SidebarCategoryModel> list = null;
+    if (map["childs"] != null) {
+      list = [];
+      for (Map<String, dynamic> child in map["childs"]) {
+        list.add(SidebarCategoryModel.fromMap(child));
+      }
+    }
+
     return SidebarCategoryModel(
-        title: map['title'], ontap: map["ontap"], childs: map['childs']);
+        title: map['title'], ontap: map["ontap"], childs: list);
   }
 
   factory SidebarCategoryModel.fromDocument(DocumentSnapshot snap) {

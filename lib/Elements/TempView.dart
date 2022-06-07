@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pentagonselllit/Elements/AppBars/AssosAppBar.dart';
+import 'package:pentagonselllit/Elements/AppSideBars/NormalSideBar.dart';
 
 class TemplateView extends StatefulWidget {
   Widget widgets;
@@ -19,6 +20,7 @@ class _TemplateViewState extends State<TemplateView> {
 
     return Scaffold(
       key: globalKey,
+      drawer: NormalSideBar(),
       body: Center(
         child: ListView(
           shrinkWrap: true,
