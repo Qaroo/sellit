@@ -7,6 +7,8 @@ import 'package:pentagonselllit/route.dart';
 import 'Models/ItemModel.dart';
 import 'dart:html' as html;
 
+import 'Models/ShopModel.dart';
+
 List<ItemModel> products = [];
 List<Widget> HomePage = [];
 List<dynamic> Menu = [];
@@ -23,6 +25,7 @@ ItemModel getProduct(String id) {
 }
 
 String shopID = "";
+ShopModel shopModel = null;
 tapped(BuildContext context, ontap_val) {
   print("ontapz");
   print("ontapz: " + ontap_val);
