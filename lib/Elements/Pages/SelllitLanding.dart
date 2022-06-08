@@ -34,7 +34,7 @@ class _LandingPageState extends State<LandingPage> {
     Map<String, Map<String, dynamic>> texts1 =
         new Map<String, Map<String, dynamic>>();
 
-    rowSpaceModel rsm1 = new rowSpaceModel(height: 50, width: 50);
+    rowSpaceModel rsm1 = new rowSpaceModel(height: 50);
     rowImagesRow ri = new rowImagesRow(
         height: 400,
         images: [

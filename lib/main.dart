@@ -5,6 +5,7 @@ import 'package:pentagonselllit/Elements/Pages/ClientPages/ShopProductsPage.dart
 import 'package:pentagonselllit/Elements/Pages/UnknownPage.dart';
 import 'package:pentagonselllit/Elements/TempView.dart';
 import 'package:pentagonselllit/args.dart';
+import 'package:pentagonselllit/database.dart';
 import 'package:pentagonselllit/product_route_pth.dart';
 import 'package:pentagonselllit/route.dart';
 import 'dart:html';
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
       "Size": ['S', 'M']
     });
 
+    print("shopzz1");
+    load_shop("check");
+    print("shopzz2");
     URL = url
         .toString()
         .replaceAll("https://", "")
