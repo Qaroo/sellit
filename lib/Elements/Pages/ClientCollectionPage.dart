@@ -31,20 +31,6 @@ class _ClientCollectionPageState extends State<ClientCollectionPage> {
   String shopIDZ = "";
   @override
   Widget build(BuildContext context) {
-    if (!finishLoad) {
-      if (!args.products.isEmpty && args.shopID != "") {
-        setState(() {
-          finishLoad = true;
-        });
-      }
-    }
-    if (!finishLoad) {
-      return loading_indicator(context);
-    }
-    if (!hasShop) {
-      print('unknownnnn');
-      return UnknownPage();
-    }
     return Container(
       child: TemplateView(widgets: ShopProductPageStyle2(context, widget.tags)),
     );

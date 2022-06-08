@@ -24,22 +24,27 @@ class ClientHomePage extends StatefulWidget {
 }
 
 class _ClientHomePageState extends State<ClientHomePage> {
+  final globalKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: database.load_shop("check"),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return loading_indicator(context);
-          } else {
-            if (snapshot.hasError || snapshot.data == null) {
-              return UnknownPage();
+    if (args.shopModel == null)
+      return FutureBuilder(
+          future: database.load_shop(context, "check", globalKey),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return loading_indicator(context);
             } else {
-              ShopModel x = snapshot.data;
-              args.shopModel = x;
-              return Text(x.menu.toString());
+              if (snapshot.hasError || snapshot.data == null) {
+                return UnknownPage();
+              } else {
+                ShopModel x = snapshot.data;
+                args.shopModel = x;
+                return ShopHomePage(
+                  globalKey: globalKey,
+                );
+              }
             }
-          }
-        });
+          });
+    return ShopHomePage(globalKey: globalKey);
   }
 }

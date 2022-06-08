@@ -34,9 +34,6 @@ class MyApp extends StatelessWidget {
       "Size": ['S', 'M']
     });
 
-    print("shopzz1");
-    load_shop("check");
-    print("shopzz2");
     URL = url
         .toString()
         .replaceAll("https://", "")

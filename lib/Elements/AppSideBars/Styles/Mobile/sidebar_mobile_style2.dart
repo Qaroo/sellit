@@ -10,8 +10,7 @@ import 'package:pentagonselllit/args.dart' as args;
 import '../../../../Models/sidebar/SidebarCategoryModel.dart';
 
 class sidebar_mobile_style2 {
-  Widget getStyle(BuildContext context,
-      List<SidebarCategoryImageModel> categories, bool logo) {
+  Widget getStyle(BuildContext context, List<dynamic> categories, bool logo) {
     List<Widget> page = [];
     if (logo == true) {
       page += [

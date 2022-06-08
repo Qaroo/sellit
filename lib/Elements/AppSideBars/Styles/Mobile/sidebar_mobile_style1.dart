@@ -49,8 +49,7 @@ class sidebar_mobile_style1 {
     }
   }
 
-  Widget getStyle(
-      BuildContext context, List<SidebarCategoryModel> categories, bool logo) {
+  Widget getStyle(BuildContext context, List<dynamic> categories, bool logo) {
     List<Widget> page = [];
     if (logo == true) {
       page += [

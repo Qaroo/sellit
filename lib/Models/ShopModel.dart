@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:pentagonselllit/Models/ItemModel.dart';
 
 class ShopModel {
@@ -10,7 +11,7 @@ class ShopModel {
   String minimumuShipping;
   List<ItemModel> items;
   List<dynamic> menu;
-  List<dynamic> homeDesign;
+  List<Widget> homeDesign;
 
   factory ShopModel.fromMap(Map<String, dynamic> map) {
     return ShopModel(

@@ -14,8 +14,7 @@ class sidebar_mobile_style3 {
 
   action(String ontap) {}
 
-  Widget getStyle(BuildContext context,
-      List<SidebarCategoryContainerModel> categories, bool logo) {
+  Widget getStyle(BuildContext context, List<dynamic> categories, bool logo) {
     List<Widget> page = [];
     if (logo == true) {
       page += [

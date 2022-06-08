@@ -21,7 +21,7 @@ Widget FilterTile(BuildContext context, String text) {
 Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
   print("COllection product:" + args.products.toString());
   List<ItemModel> items_to_show = [];
-  for (ItemModel item in args.products) {
+  for (ItemModel item in args.shopModel.items) {
     bool valid = true;
     if (tags.length > 0) {
       if (item.tags != null) {

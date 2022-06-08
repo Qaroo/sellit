@@ -18,20 +18,20 @@ class NormalSideBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (args.menuType == "category") {
+    if (args.shopModel.menuType == "category") {
       return Drawer(
           child: sidebar_mobile_style1()
-              .getStyle(context, args.Menu, args.menuLogo));
+              .getStyle(context, args.shopModel.menu, args.shopModel.menuLogo));
     }
-    if (args.menuType == "image") {
+    if (args.shopModel.menuType == "image") {
       return Drawer(
           child: sidebar_mobile_style2()
-              .getStyle(context, args.Menu, args.menuLogo));
+              .getStyle(context, args.shopModel.menu, args.shopModel.menuLogo));
     }
-    if (args.menuType == "container") {
+    if (args.shopModel.menuType == "container") {
       return Drawer(
           child: sidebar_mobile_style3()
-              .getStyle(context, args.Menu, args.menuLogo));
+              .getStyle(context, args.shopModel.menu, args.shopModel.menuLogo));
     }
     return Drawer();
   }
