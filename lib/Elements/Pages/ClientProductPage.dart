@@ -7,55 +7,40 @@ import 'package:pentagonselllit/Elements/Pages/ClientPages/ShopProductsPage.dart
 import 'package:pentagonselllit/Elements/Pages/UnknownPage.dart';
 import 'package:pentagonselllit/Models/ItemModel.dart';
 import 'package:pentagonselllit/args.dart' as args;
+import 'package:pentagonselllit/database.dart' as database;
 
 import '../TempView.dart';
 import 'ClientPages/ShopProductPage.dart';
+import '../../Models/ShopModel.dart';
 
 List<ItemModel> itemsCollection;
 String totalShopID;
 
 class ClientProductPage extends StatefulWidget {
   String domain;
-  String product_id;
-  ClientProductPage({this.domain, Key key, this.product_id}) : super(key: key);
+  String item_id;
+  ClientProductPage({this.domain, Key key, this.item_id}) : super(key: key);
 
   @override
   _ClientProductPageState createState() => _ClientProductPageState();
 }
 
 class _ClientProductPageState extends State<ClientProductPage> {
-  bool finishLoad = false;
-  bool hasShop = true;
-  bool loadTheme = false;
-  ItemModel product = null;
-  String shopIDZ = "";
-  @override
+  final globalKey = GlobalKey<ScaffoldState>();
   Widget build(BuildContext context) {
-    if (!finishLoad) {
-      if (!args.products.isEmpty && args.shopID != "") {
-        for (ItemModel model in args.products) {
-          if (model.id == widget.product_id) {
-            setState(() {
-              product = model;
-              finishLoad = true;
-            });
+    return FutureBuilder(
+        future: database.load_item(widget.item_id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return loading_indicator(context);
+          } else {
+            if (snapshot.hasError || snapshot.data == null) {
+              return UnknownPage();
+            } else {
+              return TemplateView(
+                  widgets: ShopProductPage1(item: snapshot.data));
+            }
           }
-        }
-      }
-    }
-
-    if (!finishLoad) {
-      return loading_indicator(context);
-    }
-    if (!hasShop) {
-      return UnknownPage();
-    }
-    return Container(
-      child: TemplateView(
-        widgets: ShopProductPage1(
-          productz: product,
-        ),
-      ),
-    );
+        });
   }
 }

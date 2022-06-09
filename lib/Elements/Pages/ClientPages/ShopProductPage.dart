@@ -15,9 +15,9 @@ import '../../../route.dart';
 import '../../ProductsStyles.dart';
 
 class ShopProductPage1 extends StatefulWidget {
-  ShopProductPage1({Key key, this.productz}) : super(key: key);
+  ShopProductPage1({Key key, this.item}) : super(key: key);
 
-  ItemModel productz;
+  ItemModel item;
   String selectedSize = "";
   Map<String, dynamic> selectedOptions = {};
 
@@ -28,7 +28,7 @@ class ShopProductPage1 extends StatefulWidget {
 class _ShopProductPage1State extends State<ShopProductPage1> {
   @override
   Widget build(BuildContext context) {
-    ItemModel product = widget.productz;
+    ItemModel product = widget.item;
     List<Widget> options = [];
     if (product.options != null) {
       for (Map option in product.options) {

@@ -4,6 +4,7 @@ import 'package:pentagonselllit/Models/ItemModel.dart';
 
 class ShopModel {
   String shopName;
+  String shopID;
   String newsLine;
   String menuType;
   bool menuLogo;
@@ -52,4 +53,14 @@ class ShopModel {
     this.menu,
     this.homeDesign,
   });
+
+  bool update_item(ItemModel item) {
+    for (ItemModel model in this.items) {
+      if (model.id == item.id) {
+        this.items[this.items.indexOf(model)] = item;
+        return true;
+      }
+    }
+    return false;
+  }
 }

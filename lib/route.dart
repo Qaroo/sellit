@@ -109,7 +109,7 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
         if (isProduct)
           MaterialPage(
             key: ValueKey('ProductPage'),
-            child: ClientProductPage(domain: "shop", product_id: _productID),
+            child: ClientProductPage(domain: "shop", item_id: _productID),
           ),
         if (isCart)
           MaterialPage(

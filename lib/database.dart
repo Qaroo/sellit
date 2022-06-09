@@ -23,7 +23,7 @@ import 'package:pentagonselllit/RowTypes/RowImagesWithTextRow.dart';
 import 'package:pentagonselllit/RowTypes/RowProductsRowModel.dart';
 import 'package:pentagonselllit/RowTypes/RowSpaceModel.dart';
 import 'package:pentagonselllit/RowTypes/RowTextModel.dart';
-import 'package:pentagonselllit/args.dart';
+import 'package:pentagonselllit/args.dart' as args;
 
 Future<bool> check_domain(domain) async {
   return FirebaseFirestore.instance
@@ -35,7 +35,22 @@ Future<bool> check_domain(domain) async {
   });
 }
 
-FutureBuilder loadShop() {}
+Future<ItemModel> load_item(String itemID) async {
+  return FirebaseFirestore.instance
+      .collection("sites")
+      .doc(args.shopModel.shopID)
+      .collection("items")
+      .doc(itemID)
+      .get()
+      .then((value) {
+    ItemModel item = ItemModel.fromMap(value.data());
+    bool update = args.shopModel.update_item(item);
+    if (!update) {
+      return null;
+    }
+    return item;
+  });
+}
 
 Future<bool> firstFunc(String uid) async {
   DocumentSnapshot userData =
@@ -162,6 +177,7 @@ Future<ShopModel> load_shop(
           ));
           now.add(AssosBottomBar(context));
           x.homeDesign = now;
+          x.shopID = shopID;
           return x;
         });
       });
