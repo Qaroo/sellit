@@ -25,16 +25,6 @@ import 'package:pentagonselllit/RowTypes/RowSpaceModel.dart';
 import 'package:pentagonselllit/RowTypes/RowTextModel.dart';
 import 'package:pentagonselllit/args.dart' as args;
 
-Future<bool> check_domain(domain) async {
-  return FirebaseFirestore.instance
-      .collection("domains")
-      .doc(domain)
-      .get()
-      .then((value) {
-    return value.data() != null;
-  });
-}
-
 Future<ItemModel> load_item(String itemID) async {
   return FirebaseFirestore.instance
       .collection("sites")
@@ -50,13 +40,6 @@ Future<ItemModel> load_item(String itemID) async {
     }
     return item;
   });
-}
-
-Future<bool> firstFunc(String uid) async {
-  DocumentSnapshot userData =
-      await FirebaseFirestore.instance.collection('Users').doc(uid).get();
-  bool value = userData["param"];
-  return value;
 }
 
 Future<String> get_shopID(domain) async {
