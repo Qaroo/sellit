@@ -26,9 +26,9 @@ ItemModel getProduct(String id) {
 
 String shopID = "";
 ShopModel shopModel = null;
-tapped(BuildContext context, ontap_val) {
+tapped(BuildContext context, String ontap_val) {
   print("ontapz");
-  print("ontapz: " + ontap_val);
+  print("ontapz2: " + ontap_val);
   if (ontap_val.contains("url:")) {
     String url = ontap_val.split("url:")[1];
     html.window.open(url, 'new tab');

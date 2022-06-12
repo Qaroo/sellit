@@ -18,7 +18,7 @@ class RowProductsRowModel {
     return RowProductsRowModel(
       height: map["height"],
       type: map["type"],
-      products: map["products"],
+      products: map["items"],
       width: map["width"],
       style: map["style"],
     );
@@ -26,29 +26,27 @@ class RowProductsRowModel {
 
   Widget toWidget(BuildContext context) {
     List<ItemModel> items = [];
-    for (ItemModel item in args.products) {
+    for (ItemModel item in args.shopModel.items) {
       if (products.contains(item.id)) {
-        for (int i = 0; i < 6; i++) {
-          items.add(item);
-        }
+        items.add(item);
       }
     }
-    print("Products:" + args.products.toString());
-    print("Items loaded:" + items.toString());
     List<Widget> widgets = [];
-    if (height < 1) {
+    if (height <= 1) {
       height = MediaQuery.of(context).size.height * height;
     }
-    if (width < 1) {
+    if (width <= 1) {
       width = MediaQuery.of(context).size.width * width;
     }
     widgets.add(SizedBox(
       width: 10,
     ));
-    widgets.add(ProductStyle1(items[0], height, width, 20));
-    widgets.add(SizedBox(
-      width: 10,
-    ));
+    for (ItemModel item in items) {
+      widgets.add(ProductStyle1(item, height, width, 16, context));
+      widgets.add(SizedBox(
+        width: 10,
+      ));
+    }
 
     return Container(
       height: this.height,

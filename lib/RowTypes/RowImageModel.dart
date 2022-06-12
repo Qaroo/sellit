@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pentagonselllit/args.dart' as args;
 
 class RowImageModel {
   double height;
@@ -10,6 +11,7 @@ class RowImageModel {
   String fit;
   String padding;
   Map<String, dynamic> texts;
+  String ontap;
 
   RowImageModel(
       {this.height,
@@ -19,7 +21,8 @@ class RowImageModel {
       this.image,
       this.fit,
       this.texts,
-      this.width});
+      this.width,
+      this.ontap});
 
   factory RowImageModel.fromMap(Map<String, dynamic> map) {
     return RowImageModel(
@@ -29,6 +32,7 @@ class RowImageModel {
       radius: map["radius"],
       image: map["image"],
       fit: map["fit"],
+      ontap: map["ontap"],
       texts: map["texts"],
       width: map["width"],
     );
@@ -64,20 +68,30 @@ class RowImageModel {
       ];
     } else if (0 < width && width <= 1) {
       textsWidgets = [
-        Image.network(
-          image,
-          fit: fit,
-          height: heightIMAGE,
-          width: MediaQuery.of(context).size.width * width,
+        GestureDetector(
+          onTap: () {
+            args.tapped(context, ontap);
+          },
+          child: Image.network(
+            image,
+            fit: fit,
+            height: heightIMAGE,
+            width: MediaQuery.of(context).size.width * width,
+          ),
         )
       ];
     } else {
       textsWidgets = [
-        Image.network(
-          image,
-          fit: fit,
-          height: heightIMAGE,
-          width: width,
+        GestureDetector(
+          onTap: () {
+            args.tapped(context, ontap);
+          },
+          child: Image.network(
+            image,
+            fit: fit,
+            height: heightIMAGE,
+            width: width,
+          ),
         )
       ];
     }

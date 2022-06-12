@@ -29,7 +29,7 @@ class ClientCartPage extends StatefulWidget {
 }
 
 List<String> _items = [];
-Future<List<String>> setUserid() async {
+Future<List<String>> setPrefernce() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   _items = pref.getStringList('cart');
   if (_items.length == 0) {
@@ -39,58 +39,14 @@ Future<List<String>> setUserid() async {
 }
 
 class _ClientCartPageState extends State<ClientCartPage> {
-  bool finishLoad = false;
-  bool hasShop = true;
-  bool loadTheme = false;
-  ItemModel product = null;
-  String shopIDZ = "";
-  int shippingPrice = 0, minimumShipping = 0;
   List<ItemCartModel> cart;
   @override
   Widget build(BuildContext context) {
-    print("check1234");
-    if (!finishLoad) {
-      FirebaseFirestore.instance
-          .collection("domains")
-          .doc(widget.domain)
-          .get()
-          .then((event) {
-        if (event.data() == null) {
-          print("has no domain named: " + widget.domain);
-          setState(() {
-            hasShop = false;
-            finishLoad = true;
-          });
-        } else {
-          FirebaseFirestore.instance
-              .collection("sites")
-              .doc(event.data()["shopID"])
-              .get()
-              .then((value) {
-            setState(() {
-              print("Shipping: data " + value.data().toString());
-              shippingPrice =
-                  int.parse(value.data()["shippingPrice"].toString());
-              minimumShipping =
-                  int.parse(value.data()["minimumShipping"].toString());
-              finishLoad = true;
-            });
-          });
-        }
-
-        //Check cart options and load them
-      });
-    }
-
-    if (!finishLoad) {
-      return loading_indicator(context);
-    }
-    if (!hasShop) {
+    if (args.shopModel == null) {
       return UnknownPage();
     }
-
     return FutureBuilder(
-        future: setUserid(),
+        future: setPrefernce(),
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
           if (_items != null) {
             List<ItemCartModel> models = [];
@@ -103,8 +59,8 @@ class _ClientCartPageState extends State<ClientCartPage> {
               child: TemplateView(
                 widgets: ShopCartPage(
                   cart: models,
-                  shippingPrice: shippingPrice,
-                  minimumShipping: minimumShipping,
+                  shippingPrice: int.parse(args.shopModel.shippingPrice),
+                  minimumShipping: int.parse(args.shopModel.minimumShipping),
                 ),
               ),
             ); // your widget

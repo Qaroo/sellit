@@ -9,7 +9,7 @@ class ShopModel {
   String menuType;
   bool menuLogo;
   String shippingPrice;
-  String minimumuShipping;
+  String minimumShipping;
   List<ItemModel> items;
   List<dynamic> menu;
   List<Widget> homeDesign;
@@ -21,7 +21,7 @@ class ShopModel {
       menuType: map['menuType'],
       menuLogo: map['menuLogo'],
       shippingPrice: map['shippingPrice'],
-      minimumuShipping: map['minimumuShipping'],
+      minimumShipping: map['minimumuShipping'],
       items: map['items'],
       menu: map['menu'],
       homeDesign: map['homeDesign'],
@@ -35,7 +35,7 @@ class ShopModel {
       menuType: snap['menuType'],
       menuLogo: snap['menuLogo'],
       shippingPrice: snap['shippingPrice'],
-      minimumuShipping: snap['minimumuShipping'],
+      minimumShipping: snap['minimumuShipping'],
       items: snap['items'],
       menu: snap['menu'],
       homeDesign: snap['homeDesign'],
@@ -48,7 +48,7 @@ class ShopModel {
     this.menuType,
     this.menuLogo,
     this.shippingPrice,
-    this.minimumuShipping,
+    this.minimumShipping,
     this.items,
     this.menu,
     this.homeDesign,

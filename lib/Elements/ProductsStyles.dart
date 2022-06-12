@@ -2,44 +2,35 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pentagonselllit/Models/ItemModel.dart';
+import 'package:pentagonselllit/args.dart' as args;
 
-Widget ProductStyle1(
-    ItemModel item, double height, double width, double baseFottSize) {
+Widget ProductStyle1(ItemModel item, double height, double width,
+    double baseFottSize, BuildContext context) {
   return Container(
-    height: height - 9,
-    child: Column(
-      children: [
-        Image.network(item.image1,
-            fit: BoxFit.contain, height: height * 0.75, width: width),
-        Container(
-            height: height * 0.25,
-            width: width,
-            child: Column(
-              children: [
-                Container(height: 10),
-                Text(
-                  "New Season",
-                  style: GoogleFonts.comingSoon(
-                      fontSize: baseFottSize - 2, color: Colors.red),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  item.brand,
-                  style: GoogleFonts.acme(
-                      fontSize: baseFottSize,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  item.name,
-                  style: GoogleFonts.acme(
-                      fontSize: baseFottSize - 2, color: Colors.black),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ))
-      ],
+    height: height,
+    width: width,
+    child: GestureDetector(
+      onTap: () {
+        args.tapped(context, "page:product:" + item.id);
+      },
+      child: Stack(
+        children: [
+          Positioned(
+            right: 0,
+            left: 0,
+            top: 0,
+            child: Image.network(item.image1, height: height * 0.85),
+          ),
+          Positioned(
+            right: 0,
+            left: 0,
+            bottom: 0,
+            child: Center(
+                child:
+                    Text(item.name, style: TextStyle(fontSize: baseFottSize))),
+          ),
+        ],
+      ),
     ),
   );
 }

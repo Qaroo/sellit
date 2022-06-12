@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pentagonselllit/Models/ItemCartModel.dart';
 import 'package:pentagonselllit/Models/ShopModel.dart';
 
 import 'Elements/AppBottomBars/AssosBottomBar.dart';
@@ -71,6 +72,7 @@ Future<ShopModel> load_shop(
         items.add(ItemModel.fromMap(element.data()));
       });
       x.items = items;
+      args.shopModel = x;
       return FirebaseFirestore.instance
           .collection("sites")
           .doc(shopID)
@@ -104,6 +106,7 @@ Future<ShopModel> load_shop(
         }
 
         x.menu = menu;
+        args.shopModel = x;
         return FirebaseFirestore.instance
             .collection("sites")
             .doc(shopID)
@@ -141,15 +144,13 @@ Future<ShopModel> load_shop(
             } else if (element.data()['type'] == "imagesrow") {
               rowImagesRow textModel = rowImagesRow.fromMap(element.data());
               now.add(textModel.toWidget(context));
-            } else if (element.data()['type'] == "imagewithtext") {
-              rowImagesWithTextRow textModel =
-                  rowImagesWithTextRow.fromMap(element.data());
-              now.add(textModel.toWidget(context));
             } else if (element.data()['type'] == "row") {
               RowImagesRowModel textModel =
                   RowImagesRowModel.fromMap(element.data());
               now.add(textModel.toWidget(context));
             } else if (element.data()['type'] == "items_row") {
+              print("Row model " + element.data().toString());
+              print("Row model " + args.shopModel.items.toString());
               RowProductsRowModel textModel =
                   RowProductsRowModel.fromMap(element.data());
               now.add(textModel.toWidget(context));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pentagonselllit/args.dart' as args;
 
 class RowImagesRowModel {
   double height;
@@ -21,7 +22,7 @@ class RowImagesRowModel {
     );
   }
 
-  Widget buildCard(BuildContext context, Map<dynamic, dynamic> xoxo) {
+  Widget buildCard(BuildContext context, Map<dynamic, dynamic> image) {
     Size size = MediaQuery.of(context).size;
     if (this.height < 1) {
       this.height = this.height * size.height;
@@ -34,18 +35,23 @@ class RowImagesRowModel {
       height: this.height,
       child: Column(
         children: [
-          ClipRRect(
-            child: Image.network(
-              xoxo["src"],
-              height: this.height - 40,
-              fit: BoxFit.fill,
+          GestureDetector(
+            onTap: () {
+              args.tapped(context, image["ontap"]);
+            },
+            child: ClipRRect(
+              child: Image.network(
+                image["src"],
+                height: this.height - 40,
+                fit: BoxFit.fill,
+              ),
+              borderRadius: BorderRadius.circular(this.radius),
             ),
-            borderRadius: BorderRadius.circular(this.radius),
           ),
           SizedBox(
             height: 20,
           ),
-          Text(xoxo["text"])
+          Text(image["text"])
         ],
       ),
     );

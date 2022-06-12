@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
     optionsz.add({
       "Size": ['S', 'M']
     });
-
     URL = url
         .toString()
         .replaceAll("https://", "")
