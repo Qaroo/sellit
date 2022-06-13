@@ -12,8 +12,10 @@ import 'package:pentagonselllit/Elements/Pages/UnknownPage.dart';
 import 'package:pentagonselllit/Models/ItemModel.dart';
 import 'package:pentagonselllit/args.dart' as args;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pentagonselllit/database.dart' as database;
 
 import '../../Models/ItemCartModel.dart';
+import '../../Models/ShopModel.dart';
 import '../TempView.dart';
 import 'ClientPages/ShopProductPage.dart';
 
@@ -40,10 +42,26 @@ Future<List<String>> setPrefernce() async {
 
 class _ClientCartPageState extends State<ClientCartPage> {
   List<ItemCartModel> cart;
+  final globalKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     if (args.shopModel == null) {
-      return UnknownPage();
+      return FutureBuilder(
+          future: database.load_shop(context, widget.domain, globalKey),
+          builder: (BuildContext context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return loading_indicator(context);
+            } else {
+              if (snapshot.hasError || snapshot.data == null) {
+                return UnknownPage();
+              } else {
+                args.shopModel = snapshot.data;
+                return ClientCartPage(
+                  domain: widget.domain,
+                );
+              }
+            }
+          });
     }
     return FutureBuilder(
         future: setPrefernce(),

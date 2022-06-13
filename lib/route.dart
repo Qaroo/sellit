@@ -1,137 +1,104 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pentagonselllit/Elements/Pages/ClientCollectionPage.dart';
-import 'package:pentagonselllit/Elements/TempView.dart';
+import 'package:pentagonselllit/Elements/Pages/ClientHomePage.dart';
+import 'package:pentagonselllit/args.dart';
 import 'package:pentagonselllit/product_route_pth.dart';
 
 import 'Elements/Pages/ClientCartPage.dart';
-import 'Elements/Pages/ClientHomePage.dart';
-import 'Elements/Pages/ClientPages/ShopProductPage.dart';
-import 'Elements/Pages/ClientPages/ShopProductsPage.dart';
+import 'Elements/Pages/ClientCollectionPage.dart';
 import 'Elements/Pages/ClientProductPage.dart';
-import 'Elements/Pages/UnknownPage.dart';
-import 'Models/ItemModel.dart';
-import 'package:pentagonselllit/args.dart';
-import 'package:pentagonselllit/args.dart' as args;
 
-class ShopRouteInformationParser
-    extends RouteInformationParser<ProductRoutePath> {
-  @override
-  Future<ProductRoutePath> parseRouteInformation(
-      RouteInformation routeInformation) async {
-    final uri = Uri.parse(routeInformation.location);
-    if (uri.pathSegments[0] == "cart") {
-      return ProductRoutePath.cart();
-    }
-    if (uri.pathSegments.length == 0) return ProductRoutePath.home();
+class SellitRouterDelegate extends RouterDelegate<RoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<RoutePath> {
+  final GlobalKey<NavigatorState> navigatorKey;
+  SellitRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
 
-    if (uri.pathSegments.length == 2) {
-      if (uri.pathSegments[0] == "product") {
-        return ProductRoutePath.details(uri.pathSegments[1]);
-      }
-      if (uri.pathSegments[0] == "collection") {
-        List<String> tags = uri.pathSegments[1].split(",");
-        return ProductRoutePath.collection(tags);
-      }
-    }
-
-    if (uri.pathSegments[0] == "collection") {
-      return ProductRoutePath.collection([]);
-    }
-
-    return ProductRoutePath.unknown();
-  }
-
-  @override
-  RouteInformation restoreRouteInformation(ProductRoutePath path) {
-    print("xyzy cart::: " + path.isCart.toString());
-    print("xyzy collection::: " + path.isCollection.toString());
-    print("xyzy unknown::: " + path.isUnknown.toString());
-    print("xyzy home::: " + path.isHomePage.toString());
-
-    if (path.isCart) return RouteInformation(location: '/cart');
-
-    if (path.isCollection && path.tags.length > 0) {
-      String builder = "";
-      for (String current in path.tags) {
-        builder += current + ",";
-      }
-      builder = builder.substring(0, builder.length - 1);
-      return RouteInformation(location: '/collection/${builder}');
-    }
-
-    if (path.isCollection) return RouteInformation(location: '/collection');
-    if (path.isUnknown) return RouteInformation(location: '/404');
-    if (path.isHomePage) return RouteInformation(location: '/');
-    if (path.isProductPage)
-      return RouteInformation(location: '/product/${path.id}');
-
-    return null;
-  }
-}
-
-class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<ProductRoutePath> {
-  String _productID;
-  List<String> tags;
   bool show404 = false;
+  bool isHome = false;
   bool isProduct = false;
+  String productID = null;
   bool isCollection = false;
+  List<String> tags = null;
   bool isCart = false;
 
-  @override
-  GlobalKey<NavigatorState> get navigatorKey => GlobalKey<NavigatorState>();
-
-  @override
-  ProductRoutePath get currentConfiguration {
-    if (show404) return ProductRoutePath.unknown();
-
-    if (_productID == null && !isCollection && !isCart)
-      return ProductRoutePath.home();
-
-    if (isCollection) return ProductRoutePath.collection(tags);
-
-    if (isCart) return ProductRoutePath.cart();
-
-    return ProductRoutePath.details(_productID);
+  void _handleHomeTapped() {
+    isHome = true;
+    notifyListeners();
   }
+
+  void _handleProductTapped(String id) {
+    productID = id;
+    isProduct = true;
+    notifyListeners();
+  }
+
+  void _handleCollectionTapped(List<String> tags) {
+    isCollection = true;
+    this.tags = tags;
+    notifyListeners();
+  }
+
+  void _handleCartTapeed() {
+    isCart = true;
+    notifyListeners();
+  }
+
+  // show the correct path in the url, need to return a book
+  // book route path based on current state of the app
+  RoutePath get currentConfiguration {
+    if (show404) return RoutePath.unknown();
+
+    if (isCart) return RoutePath.cart();
+
+    if (isHome) return RoutePath.home();
+
+    if (isProduct) return RoutePath.productPage(productID);
+
+    if (isCollection) return RoutePath.collection(tags);
+  }
+
+  // @override
+  // GlobalKey<NavigatorState> get navigatorKey => GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
-    print("Tags build: " + tags.toString());
     return Navigator(
       key: navigatorKey,
       pages: [
-        MaterialPage(
-          key: ValueKey('HomePage'),
-          child: ClientHomePage(domain: "shop"),
-        ),
-        if (isProduct)
+        MaterialPage(key: ValueKey('UnknownPage'), child: UnknownScreen()),
+        if (isHome)
           MaterialPage(
-            key: ValueKey('ProductPage'),
-            child: ClientProductPage(domain: "shop", item_id: _productID),
+            key: ValueKey('HomePage'),
+            child: ClientHomePage(
+              domain: "shop",
+            ),
           ),
         if (isCart)
           MaterialPage(
             key: ValueKey('CartPage'),
             child: ClientCartPage(domain: "shop"),
           ),
+        if (isProduct)
+          MaterialPage(
+            key: ValueKey('HomePage'),
+            child: ClientProductPage(domain: "shop", item_id: productID),
+          ),
         if (isCollection)
           MaterialPage(
             key: ValueKey('CollectionPage'),
             child: ClientCollectionPage(domain: "shop", tags: tags),
           ),
-        if (show404)
-          MaterialPage(key: ValueKey('UknownKey'), child: UnknownPage()),
       ],
       onPopPage: (route, result) {
-        print("xyzy4 ");
-        if (!route.didPop(result)) return false;
+        if (!route.didPop(result)) {
+          return false;
+        }
 
-        _productID = null;
-        show404 = true;
-        isCollection = false;
+        show404 = false;
+        isHome = false;
         isProduct = false;
+        productID = null;
+        isCollection = false;
+        tags = null;
         isCart = false;
         notifyListeners();
 
@@ -140,62 +107,100 @@ class ProductRouterDelegate extends RouterDelegate<ProductRoutePath>
     );
   }
 
+  // when update of route, updates the app state
   @override
-  Future<void> setNewRoutePath(ProductRoutePath path) async {
-    isProduct = path.isProductPage;
-
-    if (path.isHomePage) {
-      isCart = false;
-      isCollection = false;
-      _productID = null;
-      show404 = false;
-      isProduct = false;
-      notifyListeners();
-      return;
-    }
-    print("xyzy Continue");
-
+  Future<void> setNewRoutePath(RoutePath path) async {
     if (path.isUnknown) {
-      isCollection = false;
-      _productID = null;
       show404 = true;
-      isProduct = false;
-      isCart = false;
-      notifyListeners();
+      // have an empty return to end the function
       return;
     }
 
+    isCart = path.isCart;
+    isCollection = path.isCollection;
+    isHome = path.isHome;
+    isProduct = path.isProductPage;
+    show404 = path.isUnknown;
+    productID = path.productID;
+    tags = path.tags;
+    notifyListeners();
+  }
+}
+
+class SellitRouteInformationParser extends RouteInformationParser<RoutePath> {
+  // Converts the given route information into parsed data to pass to a
+  // RouterDelegate
+  @override
+  Future<RoutePath> parseRouteInformation(RouteInformation routeInfo) async {
+    final uri = Uri.parse(routeInfo.location);
+
+    // Handle '/'
+    if (uri.pathSegments.length == 0) return RoutePath.home();
+
+    if (uri.pathSegments.length == 1) {
+      if (uri.pathSegments.first == "collection") {
+        return RoutePath.collection([]);
+      } else if (uri.pathSegments.first == "cart") {
+        return RoutePath.cart();
+      }
+    }
+
+    // Handle 'book/:id'
+    if (uri.pathSegments.length == 2) {
+      if (uri.pathSegments.first == "collection") {
+        List<String> tags = uri.pathSegments[2].split(",");
+        return RoutePath.collection(tags);
+      } else if (uri.pathSegments.first == "product") {
+        String id = uri.pathSegments[2];
+        return RoutePath.productPage(id);
+      }
+    }
+
+    // Handle unknown routes
+    return RoutePath.unknown();
+  }
+
+  // which is used for updating browser history for the web application. If you
+  // decides to opt in, you must also overrides this method to return a route
+  // information.
+  @override
+  RouteInformation restoreRouteInformation(RoutePath path) {
+    if (path.isUnknown) {
+      return RouteInformation(location: '/404');
+    }
+    if (path.isHome) {
+      return RouteInformation(location: '/');
+    }
     if (path.isCart) {
-      isCollection = false;
-      _productID = null;
-      isCart = true;
-      show404 = false;
-      isProduct = false;
-      notifyListeners();
-      return;
+      return RouteInformation(location: '/cart');
+    }
+
+    if (path.isCollection) {
+      if (path.tags == [] || path.tags == null)
+        return RouteInformation(location: '/collection');
+
+      String tags = path.tags.toString();
+      tags = tags.substring(1, tags.length - 1);
+      return RouteInformation(location: '/collection/' + tags);
     }
 
     if (path.isProductPage) {
-      _productID = path.id;
-      isProduct = true;
-      isCart = false;
-      isCollection = false;
-      show404 = false;
-      notifyListeners();
-    } else if (path.isCollection) {
-      tags = path.tags;
-      isCart = false;
-      _productID = null;
-      isProduct = false;
-      isCollection = true;
-      notifyListeners();
-    } else {
-      _productID = null;
-      notifyListeners();
+      return RouteInformation(
+          location: '/product/' + path.productID.toString());
     }
 
-    show404 = false;
+    return null;
+  }
+}
 
-    notifyListeners();
+class UnknownScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: Text('404!'),
+      ),
+    );
   }
 }

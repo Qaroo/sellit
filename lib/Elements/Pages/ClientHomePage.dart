@@ -27,9 +27,10 @@ class _ClientHomePageState extends State<ClientHomePage> {
   final globalKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    print("In Home page");
     if (args.shopModel == null)
       return FutureBuilder(
-          future: database.load_shop(context, "check", globalKey),
+          future: database.load_shop(context, "shop", globalKey),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return loading_indicator(context);

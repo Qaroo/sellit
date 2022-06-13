@@ -39,32 +39,31 @@ tapped(BuildContext context, String ontap_val) {
         {
           if (ontap_val.contains("collection:")) {
             List<String> tags = ontap_val.split(":")[2].split(",");
-            print("tags: " + tags.toString());
-            (Router.of(context).routerDelegate as ProductRouterDelegate)
-                .setNewRoutePath(ProductRoutePath.collection(tags));
+            (Router.of(context).routerDelegate as SellitRouterDelegate)
+                .setNewRoutePath(RoutePath.collection([]));
           } else {
-            (Router.of(context).routerDelegate as ProductRouterDelegate)
-                .setNewRoutePath(ProductRoutePath.collection([]));
+            (Router.of(context).routerDelegate as SellitRouterDelegate)
+                .setNewRoutePath(RoutePath.collection([]));
           }
         }
         break;
       case "cart":
         {
-          (Router.of(context).routerDelegate as ProductRouterDelegate)
-              .setNewRoutePath(ProductRoutePath.cart());
+          (Router.of(context).routerDelegate as SellitRouterDelegate)
+              .setNewRoutePath(RoutePath.cart());
         }
         break;
       case "product":
         {
           String productID = ontap_val.split(":")[2];
-          (Router.of(context).routerDelegate as ProductRouterDelegate)
-              .setNewRoutePath(ProductRoutePath.details(productID));
+          (Router.of(context).routerDelegate as SellitRouterDelegate)
+              .setNewRoutePath(RoutePath.productPage(productID));
         }
         break;
       case "home":
         {
-          (Router.of(context).routerDelegate as ProductRouterDelegate)
-              .setNewRoutePath(ProductRoutePath.home());
+          (Router.of(context).routerDelegate as SellitRouterDelegate)
+              .setNewRoutePath(RoutePath.home());
         }
         break;
     }

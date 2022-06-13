@@ -59,9 +59,9 @@ Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
                 items_to_show.length,
                 (index) => GestureDetector(
                   onTap: () {
-                    (Router.of(context).routerDelegate as ProductRouterDelegate)
+                    (Router.of(context).routerDelegate as SellitRouterDelegate)
                         .setNewRoutePath(
-                            ProductRoutePath.details(items_to_show[index].id));
+                            RoutePath.productPage(items_to_show[index].id));
                   },
                   child: ProductStyle1(
                       items_to_show[index],

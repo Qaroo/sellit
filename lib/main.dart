@@ -55,8 +55,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      routerDelegate: ProductRouterDelegate(),
-      routeInformationParser: ShopRouteInformationParser(),
+      routerDelegate: SellitRouterDelegate(),
+      routeInformationParser: SellitRouteInformationParser(),
     );
   }
 }

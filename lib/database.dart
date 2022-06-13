@@ -54,115 +54,126 @@ Future<String> get_shopID(domain) async {
 }
 
 Future<ShopModel> load_shop(
-    BuildContext context, shopID, GlobalKey<ScaffoldState> globalKey) async {
+    BuildContext context, domain, GlobalKey<ScaffoldState> globalKey) async {
   return FirebaseFirestore.instance
-      .collection("sites")
-      .doc(shopID)
+      .collection("domains")
+      .doc(domain)
       .get()
-      .then((value1) {
-    ShopModel x = ShopModel.fromMap(value1.data());
+      .then((domainData) {
+    if (domainData.data() == null) {
+      return null;
+    }
+    String shopID = domainData.data()["shopID"];
     return FirebaseFirestore.instance
         .collection("sites")
         .doc(shopID)
-        .collection("items")
         .get()
-        .then((value2) {
-      List<ItemModel> items = [];
-      value2.docs.forEach((element) {
-        items.add(ItemModel.fromMap(element.data()));
-      });
-      x.items = items;
-      args.shopModel = x;
+        .then((value1) {
+      ShopModel x = ShopModel.fromMap(value1.data());
       return FirebaseFirestore.instance
           .collection("sites")
           .doc(shopID)
-          .collection("menu")
+          .collection("items")
           .get()
-          .then((value3) {
-        List<dynamic> menu = [];
-
-        switch (x.menuType) {
-          case "category":
-            {
-              value3.docs.forEach((element) {
-                menu.add(SidebarCategoryModel.fromMap(element.data()));
-              });
-            }
-            break;
-          case "image":
-            {
-              value3.docs.forEach((element) {
-                menu.add(SidebarCategoryImageModel.fromMap(element.data()));
-              });
-            }
-            break;
-          case "container":
-            {
-              value3.docs.forEach((element) {
-                menu.add(SidebarCategoryContainerModel.fromMap(element.data()));
-              });
-            }
-            break;
-        }
-
-        x.menu = menu;
+          .then((value2) {
+        List<ItemModel> items = [];
+        value2.docs.forEach((element) {
+          items.add(ItemModel.fromMap(element.data()));
+        });
+        x.items = items;
         args.shopModel = x;
         return FirebaseFirestore.instance
             .collection("sites")
             .doc(shopID)
-            .collection("customDesign")
+            .collection("menu")
             .get()
-            .then((snap) {
-          List<Widget> now = [];
-          now.add(
-            Container(
-                height: 50,
-                color: Color.fromRGBO(235, 235, 235, 1),
-                child: Center(
-                  child: Text(
-                    x.newsLine,
-                    style: GoogleFonts.oranienbaum(fontSize: 24),
-                  ),
-                )),
-          );
-          now.add(AssosAppBar(globalKey, context, "shophomepage"));
-          snap.docs.forEach((element) {
-            if (element.data()['type'] == "text") {
-              RowTextModel textModel = RowTextModel.fromMap(element.data());
-              now.add(textModel.toWidget());
-            } else if (element.data()['type'] == "slideshow") {
-              RowImageSlideShow textModel =
-                  RowImageSlideShow.fromMap(element.data());
-              now.add(textModel.toWidget(context));
-            } else if (element.data()['type'] == "image") {
-              RowImageModel textModel = RowImageModel.fromMap(element.data());
-              print("element: " + element.data().toString());
-              now.add(textModel.toWidget(context));
-            } else if (element.data()['type'] == "space") {
-              rowSpaceModel textModel = rowSpaceModel.fromMap(element.data());
-              now.add(textModel.toWidget());
-            } else if (element.data()['type'] == "imagesrow") {
-              rowImagesRow textModel = rowImagesRow.fromMap(element.data());
-              now.add(textModel.toWidget(context));
-            } else if (element.data()['type'] == "row") {
-              RowImagesRowModel textModel =
-                  RowImagesRowModel.fromMap(element.data());
-              now.add(textModel.toWidget(context));
-            } else if (element.data()['type'] == "items_row") {
-              print("Row model " + element.data().toString());
-              print("Row model " + args.shopModel.items.toString());
-              RowProductsRowModel textModel =
-                  RowProductsRowModel.fromMap(element.data());
-              now.add(textModel.toWidget(context));
-            }
+            .then((value3) {
+          List<dynamic> menu = [];
+
+          switch (x.menuType) {
+            case "category":
+              {
+                value3.docs.forEach((element) {
+                  menu.add(SidebarCategoryModel.fromMap(element.data()));
+                });
+              }
+              break;
+            case "image":
+              {
+                value3.docs.forEach((element) {
+                  menu.add(SidebarCategoryImageModel.fromMap(element.data()));
+                });
+              }
+              break;
+            case "container":
+              {
+                value3.docs.forEach((element) {
+                  menu.add(
+                      SidebarCategoryContainerModel.fromMap(element.data()));
+                });
+              }
+              break;
+          }
+
+          x.menu = menu;
+          args.shopModel = x;
+          return FirebaseFirestore.instance
+              .collection("sites")
+              .doc(shopID)
+              .collection("customDesign")
+              .get()
+              .then((snap) {
+            List<Widget> now = [];
+            now.add(
+              Container(
+                  height: 50,
+                  color: Color.fromRGBO(235, 235, 235, 1),
+                  child: Center(
+                    child: Text(
+                      x.newsLine,
+                      style: GoogleFonts.oranienbaum(fontSize: 24),
+                    ),
+                  )),
+            );
+            now.add(AssosAppBar(globalKey, context, "shophomepage"));
+            snap.docs.forEach((element) {
+              if (element.data()['type'] == "text") {
+                RowTextModel textModel = RowTextModel.fromMap(element.data());
+                now.add(textModel.toWidget());
+              } else if (element.data()['type'] == "slideshow") {
+                RowImageSlideShow textModel =
+                    RowImageSlideShow.fromMap(element.data());
+                now.add(textModel.toWidget(context));
+              } else if (element.data()['type'] == "image") {
+                RowImageModel textModel = RowImageModel.fromMap(element.data());
+                print("element: " + element.data().toString());
+                now.add(textModel.toWidget(context));
+              } else if (element.data()['type'] == "space") {
+                rowSpaceModel textModel = rowSpaceModel.fromMap(element.data());
+                now.add(textModel.toWidget());
+              } else if (element.data()['type'] == "imagesrow") {
+                rowImagesRow textModel = rowImagesRow.fromMap(element.data());
+                now.add(textModel.toWidget(context));
+              } else if (element.data()['type'] == "row") {
+                RowImagesRowModel textModel =
+                    RowImagesRowModel.fromMap(element.data());
+                now.add(textModel.toWidget(context));
+              } else if (element.data()['type'] == "items_row") {
+                print("Row model " + element.data().toString());
+                print("Row model " + args.shopModel.items.toString());
+                RowProductsRowModel textModel =
+                    RowProductsRowModel.fromMap(element.data());
+                now.add(textModel.toWidget(context));
+              }
+            });
+            now.add(SizedBox(
+              height: 50,
+            ));
+            now.add(AssosBottomBar(context));
+            x.homeDesign = now;
+            x.shopID = shopID;
+            return x;
           });
-          now.add(SizedBox(
-            height: 50,
-          ));
-          now.add(AssosBottomBar(context));
-          x.homeDesign = now;
-          x.shopID = shopID;
-          return x;
         });
       });
     });

@@ -247,9 +247,8 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                                 DialogButton(
                                   onPressed: () {
                                     (Router.of(context).routerDelegate
-                                            as ProductRouterDelegate)
-                                        .setNewRoutePath(
-                                            ProductRoutePath.cart());
+                                            as SellitRouterDelegate)
+                                        .setNewRoutePath(RoutePath.cart());
                                   },
                                   child: Text("סיום הזמנה",
                                       style: TextStyle(

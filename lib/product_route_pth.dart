@@ -1,43 +1,52 @@
-class ProductRoutePath {
-  final String id;
-  final List<String> tags;
+class RoutePath {
   final bool isUnknown;
-  final bool isCollection;
   final bool isCart;
+  final bool isHome;
+  final bool isCollection;
+  final List<String> tags;
+  final bool isProductPage;
+  final String productID;
 
-  ProductRoutePath.home()
-      : id = null,
-        isCart = false,
-        tags = [],
+  RoutePath.home()
+      : isHome = true,
         isUnknown = false,
-        isCollection = false;
-
-  ProductRoutePath.details(this.id)
-      : isUnknown = false,
         isCart = false,
-        tags = [],
-        isCollection = false;
+        isCollection = false,
+        tags = null,
+        isProductPage = false,
+        productID = null;
 
-  ProductRoutePath.unknown()
-      : this.id = null,
-        tags = [],
-        isCart = false,
+  RoutePath.unknown()
+      : isHome = false,
         isUnknown = true,
-        isCollection = false;
-
-  ProductRoutePath.collection(this.tags)
-      : this.id = null,
         isCart = false,
-        isUnknown = false,
-        isCollection = true;
+        isCollection = false,
+        tags = null,
+        isProductPage = false,
+        productID = null;
 
-  ProductRoutePath.cart()
-      : this.id = null,
-        this.tags = [],
+  RoutePath.cart()
+      : isHome = false,
+        isUnknown = false,
         isCart = true,
-        isUnknown = false,
-        isCollection = false;
+        isCollection = false,
+        tags = null,
+        isProductPage = false,
+        productID = null;
 
-  bool get isHomePage => id == null && !isCollection && !isCart;
-  bool get isProductPage => id != null && !isCollection && !isCart;
+  RoutePath.collection(this.tags)
+      : isHome = false,
+        isUnknown = false,
+        isCart = false,
+        isCollection = true,
+        isProductPage = false,
+        productID = null;
+
+  RoutePath.productPage(this.productID)
+      : isHome = false,
+        isUnknown = false,
+        isCart = false,
+        isCollection = false,
+        isProductPage = true,
+        tags = null;
 }

@@ -26,8 +26,8 @@ Widget AssosAppBar(
                 ),
                 GestureDetector(
                   onTap: () {
-                    (Router.of(context).routerDelegate as ProductRouterDelegate)
-                        .setNewRoutePath(ProductRoutePath.home());
+                    (Router.of(context).routerDelegate as SellitRouterDelegate)
+                        .setNewRoutePath(RoutePath.home());
                   },
                   child: Text(
                     "RY SHOPPER",
@@ -50,8 +50,8 @@ Widget AssosAppBar(
                     ),
                     onPressed: () {
                       (Router.of(context).routerDelegate
-                              as ProductRouterDelegate)
-                          .setNewRoutePath(ProductRoutePath.cart());
+                              as SellitRouterDelegate)
+                          .setNewRoutePath(RoutePath.cart());
                     }),
                 Container(
                   width: 5,
@@ -91,8 +91,8 @@ Widget AssosAppBar(
               GestureDetector(
                 onTap: () {
                   print("xyzyhome");
-                  (Router.of(context).routerDelegate as ProductRouterDelegate)
-                      .setNewRoutePath(ProductRoutePath.home());
+                  (Router.of(context).routerDelegate as SellitRouterDelegate)
+                      .setNewRoutePath(RoutePath.home());
                 },
                 child: Text(
                   "RY SHOPPER",
@@ -110,8 +110,8 @@ Widget AssosAppBar(
             children: [
               TextButton(
                 onPressed: () {
-                  (Router.of(context).routerDelegate as ProductRouterDelegate)
-                      .setNewRoutePath(ProductRoutePath.home());
+                  (Router.of(context).routerDelegate as SellitRouterDelegate)
+                      .setNewRoutePath(RoutePath.home());
                 },
                 child: Text(
                   "Home",
@@ -123,9 +123,8 @@ Widget AssosAppBar(
               ),
               TextButton(
                 onPressed: () {
-                  (Router.of(context).routerDelegate as ProductRouterDelegate)
-                      .setNewRoutePath(
-                          ProductRoutePath.collection(["shoes", "nike"]));
+                  (Router.of(context).routerDelegate as SellitRouterDelegate)
+                      .setNewRoutePath(RoutePath.collection(["shoes", "nike"]));
                 },
                 child: Text(
                   "Catalog",
