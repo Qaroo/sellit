@@ -11,6 +11,8 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../Models/ItemCartModel.dart';
+import '../../../product_route_pth.dart';
+import '../../../route.dart';
 import '../../ProductsStyles.dart';
 import "dart:html" as html;
 
@@ -234,7 +236,16 @@ void _item_settingsBottomSheet(BuildContext context, ItemCartModel item) {
                               _items.remove(current);
 
                               pref.setStringList('cart', _items);
-                              html.window.location.reload();
+                              List<ItemCartModel> models = [];
+                              for (String item in _items) {
+                                ItemCartModel m =
+                                    ItemCartModel.fromMap(json.decode(item));
+                                models.add(m);
+                              }
+                              Navigator.pop(context);
+                              (Router.of(context).routerDelegate
+                                      as SellitRouterDelegate)
+                                  .setNewRoutePath(RoutePath.cart());
                             }
                           }
                           // your widget

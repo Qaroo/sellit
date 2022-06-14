@@ -79,7 +79,7 @@ class SellitRouterDelegate extends RouterDelegate<RoutePath>
           ),
         if (isProduct)
           MaterialPage(
-            key: ValueKey('HomePage'),
+            key: ValueKey('ProductPage'),
             child: ClientProductPage(domain: "shop", item_id: productID),
           ),
         if (isCollection)
@@ -150,10 +150,11 @@ class SellitRouteInformationParser extends RouteInformationParser<RoutePath> {
     // Handle 'book/:id'
     if (uri.pathSegments.length == 2) {
       if (uri.pathSegments.first == "collection") {
-        List<String> tags = uri.pathSegments[2].split(",");
+        List<String> tags = uri.pathSegments[1].split(",");
         return RoutePath.collection(tags);
       } else if (uri.pathSegments.first == "product") {
-        String id = uri.pathSegments[2];
+        String id = uri.pathSegments[1];
+        print("product routing $id");
         return RoutePath.productPage(id);
       }
     }
@@ -178,8 +179,9 @@ class SellitRouteInformationParser extends RouteInformationParser<RoutePath> {
     }
 
     if (path.isCollection) {
-      if (path.tags == [] || path.tags == null)
+      if (path.tags.isEmpty) {
         return RouteInformation(location: '/collection');
+      }
 
       String tags = path.tags.toString();
       tags = tags.substring(1, tags.length - 1);

@@ -19,7 +19,7 @@ String totalShopID;
 class ClientProductPage extends StatefulWidget {
   String domain;
   String item_id;
-  ClientProductPage({this.domain, Key key, this.item_id}) : super(key: key);
+  ClientProductPage({this.domain, this.item_id, Key key}) : super(key: key);
 
   @override
   _ClientProductPageState createState() => _ClientProductPageState();
@@ -28,6 +28,26 @@ class ClientProductPage extends StatefulWidget {
 class _ClientProductPageState extends State<ClientProductPage> {
   final globalKey = GlobalKey<ScaffoldState>();
   Widget build(BuildContext context) {
+    if (args.shopModel == null) {
+      return FutureBuilder(
+        future: database.load_shop(context, widget.domain, globalKey),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return loading_indicator(context);
+          } else {
+            if (snapshot.hasError || snapshot.data == null) {
+              return UnknownPage();
+            } else {
+              args.shopModel = snapshot.data;
+              return ClientProductPage(
+                domain: widget.domain,
+                item_id: widget.item_id,
+              );
+            }
+          }
+        },
+      );
+    }
     return FutureBuilder(
         future: database.load_item(widget.item_id),
         builder: (context, snapshot) {

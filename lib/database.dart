@@ -27,6 +27,7 @@ import 'package:pentagonselllit/RowTypes/RowTextModel.dart';
 import 'package:pentagonselllit/args.dart' as args;
 
 Future<ItemModel> load_item(String itemID) async {
+  print("abcddd ${args.shopModel.shopID} ${itemID}");
   return FirebaseFirestore.instance
       .collection("sites")
       .doc(args.shopModel.shopID)

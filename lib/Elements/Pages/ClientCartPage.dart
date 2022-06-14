@@ -47,21 +47,22 @@ class _ClientCartPageState extends State<ClientCartPage> {
   Widget build(BuildContext context) {
     if (args.shopModel == null) {
       return FutureBuilder(
-          future: database.load_shop(context, widget.domain, globalKey),
-          builder: (BuildContext context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return loading_indicator(context);
+        future: database.load_shop(context, widget.domain, globalKey),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return loading_indicator(context);
+          } else {
+            if (snapshot.hasError || snapshot.data == null) {
+              return UnknownPage();
             } else {
-              if (snapshot.hasError || snapshot.data == null) {
-                return UnknownPage();
-              } else {
-                args.shopModel = snapshot.data;
-                return ClientCartPage(
-                  domain: widget.domain,
-                );
-              }
+              args.shopModel = snapshot.data;
+              return ClientCartPage(
+                domain: widget.domain,
+              );
             }
-          });
+          }
+        },
+      );
     }
     return FutureBuilder(
         future: setPrefernce(),
@@ -72,7 +73,6 @@ class _ClientCartPageState extends State<ClientCartPage> {
               ItemCartModel m = ItemCartModel.fromMap(json.decode(item));
               models.add(m);
             }
-
             return Container(
               child: TemplateView(
                 widgets: ShopCartPage(
