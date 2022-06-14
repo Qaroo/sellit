@@ -8,6 +8,7 @@ import '../../../route.dart';
 import '../../ProductsStyles.dart';
 import '../../TempView.dart';
 import 'ShopProductPage.dart';
+import 'dart:io';
 
 Widget FilterTile(BuildContext context, String text) {
   return ListTile(
@@ -20,8 +21,12 @@ Widget FilterTile(BuildContext context, String text) {
 //Style 2:
 Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
   print("COllection product:" + args.products.toString());
+
   List<ItemModel> items_to_show = [];
   for (ItemModel item in args.shopModel.items) {
+    if (tags.isEmpty) {
+      checked_tag = [];
+    }
     bool valid = true;
     if (tags.length > 0) {
       if (item.tags != null) {
@@ -40,6 +45,15 @@ Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
   }
 
   if (MediaQuery.of(context).size.width < MediaQuery.of(context).size.height) {
+    String tags = "";
+    double tagHeight = 0;
+    for (String tag in checked_tag) {
+      tags += "${tag} / ";
+    }
+    if (!checked_tag.isEmpty) {
+      tags = tags.substring(0, tags.length - 2);
+      tagHeight = 60;
+    }
     return Container(
       width: MediaQuery.of(context).size.width,
       color: Colors.white,
@@ -47,8 +61,17 @@ Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
         child: Column(
           children: [
             Container(
+                width: MediaQuery.of(context).size.width,
+                height: tagHeight,
+                child: Center(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(tags,
+                      style: GoogleFonts.ubuntu(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
+                ))),
+            Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.065,
               child: Row(children: [
                 GestureDetector(
                   onTap: () => _filterTapped(context),
@@ -56,14 +79,14 @@ Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
                     decoration: BoxDecoration(border: Border.all()),
                     width: MediaQuery.of(context).size.width / 2,
                     height: 40,
-                    child: Center(child: Text("Filter")),
+                    child: Center(child: Text("סינון")),
                   ),
                 ),
                 Container(
                   decoration: BoxDecoration(border: Border.all()),
                   width: MediaQuery.of(context).size.width / 2,
                   height: 40,
-                  child: Center(child: Text("Sort")),
+                  child: Center(child: Text("מיון")),
                 ),
               ]),
             ),
@@ -135,22 +158,67 @@ Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
   );
 }
 
+List<String> checked_tag = [];
+
 void _filterTapped(BuildContext context) {
-  List<Widget> tiles = [];
-  for (String tag in args.shopModel.tags) {
-    tiles.add(Container(
-        height: 30,
-        width: MediaQuery.of(context).size.width,
-        child: Center(
-          child: Text(tag),
-        )));
-  }
   showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
-        return Container(
-            child: Column(
-          children: tiles,
-        ));
+        return StatefulBuilder(
+            builder: (BuildContext context2, StateSetter setState) {
+          List<Widget> tiles = [];
+          for (String tag in args.shopModel.tags) {
+            tiles.add(
+              CheckboxListTile(
+                title: Text(tag),
+                value: checked_tag.contains(tag),
+                onChanged: (value) {
+                  setState(() {
+                    if (value) {
+                      checked_tag.add(tag);
+                    } else {
+                      checked_tag.remove(tag);
+                    }
+                  });
+                },
+              ),
+            );
+          }
+          tiles.add(Container(height: 10));
+          tiles.add(
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                Future.delayed(
+                  const Duration(milliseconds: 50),
+                  () {
+                    (Router.of(context).routerDelegate as SellitRouterDelegate)
+                        .setNewRoutePath(RoutePath.collection(checked_tag));
+                  },
+                );
+              },
+              child: Container(
+                color: Colors.blue,
+                width: MediaQuery.of(context).size.width - 20,
+                height: 40,
+                child: Center(
+                  child: Text(
+                    "שמור",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ),
+            ),
+          );
+          tiles.add(Container(height: 20));
+
+          return Container(
+            child: SingleChildScrollView(
+              child: Column(
+                children: tiles,
+              ),
+            ),
+          );
+        });
       });
 }

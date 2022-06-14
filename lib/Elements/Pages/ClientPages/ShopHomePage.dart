@@ -43,9 +43,7 @@ class _ShopHomePageState extends State<ShopHomePage> {
     }
     return TemplateView(
         widgets: Center(
-      child: ListView(
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
+      child: Column(
         children: homeDesign,
       ),
     ));
