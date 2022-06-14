@@ -82,6 +82,14 @@ Future<ShopModel> load_shop(
           items.add(ItemModel.fromMap(element.data()));
         });
         x.items = items;
+        x.tags = [];
+        for (ItemModel item in items) {
+          for (String tag in item.tags) {
+            if (!x.tags.contains(tag)) {
+              x.tags.add(tag);
+            }
+          }
+        }
         args.shopModel = x;
         return FirebaseFirestore.instance
             .collection("sites")

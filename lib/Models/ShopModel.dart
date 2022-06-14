@@ -13,6 +13,7 @@ class ShopModel {
   List<ItemModel> items;
   List<dynamic> menu;
   List<dynamic> homeDesign;
+  List<String> tags;
 
   factory ShopModel.fromMap(Map<String, dynamic> map) {
     return ShopModel(
@@ -52,6 +53,7 @@ class ShopModel {
     this.items,
     this.menu,
     this.homeDesign,
+    this.tags,
   });
 
   bool update_item(ItemModel item) {

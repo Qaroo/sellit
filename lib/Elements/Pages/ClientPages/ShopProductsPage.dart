@@ -44,35 +44,62 @@ Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
       width: MediaQuery.of(context).size.width,
       color: Colors.white,
       child: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.95,
-          height: MediaQuery.of(context).size.height,
-          color: Colors.white,
-          child: Center(
-            child: GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: (MediaQuery.of(context).size.width * 0.95 / 2) /
-                  (MediaQuery.of(context).size.height * 0.5 + 11),
-              children: List.generate(
-                items_to_show.length,
-                (index) => GestureDetector(
-                  onTap: () {
-                    (Router.of(context).routerDelegate as SellitRouterDelegate)
-                        .setNewRoutePath(
-                            RoutePath.productPage(items_to_show[index].id));
-                  },
-                  child: ProductStyle1(
-                      items_to_show[index],
-                      MediaQuery.of(context).size.height * 0.5,
-                      MediaQuery.of(context).size.width * 0.95 / 2,
-                      20,
-                      context),
+        child: Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.065,
+              child: Row(children: [
+                GestureDetector(
+                  onTap: () => _filterTapped(context),
+                  child: Container(
+                    decoration: BoxDecoration(border: Border.all()),
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: 40,
+                    child: Center(child: Text("Filter")),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(border: Border.all()),
+                  width: MediaQuery.of(context).size.width / 2,
+                  height: 40,
+                  child: Center(child: Text("Sort")),
+                ),
+              ]),
+            ),
+            Container(height: 3),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height - 40,
+              color: Colors.white,
+              child: Center(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio:
+                      (MediaQuery.of(context).size.width * 0.95 / 2) /
+                          (MediaQuery.of(context).size.height * 0.37 + 17),
+                  children: List.generate(
+                    items_to_show.length,
+                    (index) => GestureDetector(
+                      onTap: () {
+                        (Router.of(context).routerDelegate
+                                as SellitRouterDelegate)
+                            .setNewRoutePath(
+                                RoutePath.productPage(items_to_show[index].id));
+                      },
+                      child: product_card(
+                          items_to_show[index],
+                          MediaQuery.of(context).size.height * 0.37,
+                          MediaQuery.of(context).size.width * 0.95 / 2,
+                          context),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -95,11 +122,10 @@ Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
                 (MediaQuery.of(context).size.height * 0.5 + 11),
             children: List.generate(
               items_to_show.length,
-              (index) => ProductStyle1(
+              (index) => product_card(
                   items_to_show[index],
                   MediaQuery.of(context).size.height * 0.5,
                   MediaQuery.of(context).size.width * 0.8 / 3,
-                  20,
                   context),
             ),
           ),
@@ -107,4 +133,24 @@ Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
       ),
     ),
   );
+}
+
+void _filterTapped(BuildContext context) {
+  List<Widget> tiles = [];
+  for (String tag in args.shopModel.tags) {
+    tiles.add(Container(
+        height: 30,
+        width: MediaQuery.of(context).size.width,
+        child: Center(
+          child: Text(tag),
+        )));
+  }
+  showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return Container(
+            child: Column(
+          children: tiles,
+        ));
+      });
 }

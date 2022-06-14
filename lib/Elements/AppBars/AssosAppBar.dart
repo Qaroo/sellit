@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pentagonselllit/Elements/Pages/ClientHomePage.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:pentagonselllit/args.dart' as args;
 
 import '../../product_route_pth.dart';
 import '../../route.dart';
@@ -30,7 +31,7 @@ Widget AssosAppBar(
                         .setNewRoutePath(RoutePath.home());
                   },
                   child: Text(
-                    "RY SHOPPER",
+                    args.shopModel.shopName,
                     style: GoogleFonts.gidugu(
                         fontSize: 48, color: Color.fromRGBO(50, 50, 50, 1)),
                   ),

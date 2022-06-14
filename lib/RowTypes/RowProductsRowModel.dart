@@ -42,7 +42,7 @@ class RowProductsRowModel {
       width: 10,
     ));
     for (ItemModel item in items) {
-      widgets.add(ProductStyle1(item, height, width, 16, context));
+      widgets.add(product_row_style(item, height, width, 16, context));
       widgets.add(SizedBox(
         width: 10,
       ));

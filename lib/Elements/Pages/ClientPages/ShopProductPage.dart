@@ -479,11 +479,10 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                       (MediaQuery.of(context).size.height * 0.5 + 60),
                   children: List.generate(
                     inrow,
-                    (index) => ProductStyle1(
+                    (index) => product_card(
                         args.products[index],
                         MediaQuery.of(context).size.height * 0.5,
                         MediaQuery.of(context).size.width / 4,
-                        20,
                         context),
                   ),
                 ),
