@@ -89,6 +89,7 @@ class SellitRouterDelegate extends RouterDelegate<RoutePath>
           ),
       ],
       onPopPage: (route, result) {
+        print("page pop");
         if (!route.didPop(result)) {
           return false;
         }
@@ -124,6 +125,7 @@ class SellitRouterDelegate extends RouterDelegate<RoutePath>
     productID = path.productID;
     tags = path.tags;
     notifyListeners();
+    return;
   }
 }
 

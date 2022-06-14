@@ -11,7 +11,7 @@ class rowSpaceModel {
     );
   }
 
-  Widget toWidget() {
+  Widget toWidget(BuildContext context) {
     return SizedBox(
       height: height,
     );

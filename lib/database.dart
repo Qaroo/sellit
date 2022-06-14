@@ -123,47 +123,35 @@ Future<ShopModel> load_shop(
               .collection("customDesign")
               .get()
               .then((snap) {
-            List<Widget> now = [];
-            now.add(
-              Container(
-                  height: 50,
-                  color: Color.fromRGBO(235, 235, 235, 1),
-                  child: Center(
-                    child: Text(
-                      x.newsLine,
-                      style: GoogleFonts.oranienbaum(fontSize: 24),
-                    ),
-                  )),
-            );
-            now.add(AssosAppBar(globalKey, context, "shophomepage"));
+            List<dynamic> now = [];
             snap.docs.forEach((element) {
               if (element.data()['type'] == "text") {
                 RowTextModel textModel = RowTextModel.fromMap(element.data());
-                now.add(textModel.toWidget());
+                now.add(textModel);
               } else if (element.data()['type'] == "slideshow") {
                 RowImageSlideShow textModel =
                     RowImageSlideShow.fromMap(element.data());
-                now.add(textModel.toWidget(context));
+                now.add(textModel);
               } else if (element.data()['type'] == "image") {
                 RowImageModel textModel = RowImageModel.fromMap(element.data());
                 print("element: " + element.data().toString());
-                now.add(textModel.toWidget(context));
+                now.add(textModel);
               } else if (element.data()['type'] == "space") {
                 rowSpaceModel textModel = rowSpaceModel.fromMap(element.data());
-                now.add(textModel.toWidget());
+                now.add(textModel);
               } else if (element.data()['type'] == "imagesrow") {
                 rowImagesRow textModel = rowImagesRow.fromMap(element.data());
-                now.add(textModel.toWidget(context));
+                now.add(textModel);
               } else if (element.data()['type'] == "row") {
                 RowImagesRowModel textModel =
                     RowImagesRowModel.fromMap(element.data());
-                now.add(textModel.toWidget(context));
+                now.add(textModel);
               } else if (element.data()['type'] == "items_row") {
                 print("Row model " + element.data().toString());
                 print("Row model " + args.shopModel.items.toString());
                 RowProductsRowModel textModel =
                     RowProductsRowModel.fromMap(element.data());
-                now.add(textModel.toWidget(context));
+                now.add(textModel);
               }
             });
             now.add(SizedBox(

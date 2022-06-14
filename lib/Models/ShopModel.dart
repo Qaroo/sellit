@@ -12,7 +12,7 @@ class ShopModel {
   String minimumShipping;
   List<ItemModel> items;
   List<dynamic> menu;
-  List<Widget> homeDesign;
+  List<dynamic> homeDesign;
 
   factory ShopModel.fromMap(Map<String, dynamic> map) {
     return ShopModel(

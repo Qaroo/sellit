@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pentagonselllit/Elements/AppBars/AssosAppBar.dart';
 import 'package:pentagonselllit/Elements/AppBottomBars/AssosBottomBar.dart';
 import 'package:pentagonselllit/Elements/AppSideBars/NormalSideBar.dart';
+import 'package:pentagonselllit/Elements/TempView.dart';
 import 'package:pentagonselllit/Models/ItemModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pentagonselllit/RowTypes/RowImageModel.dart';
@@ -32,26 +33,21 @@ class _ShopHomePageState extends State<ShopHomePage> {
   List<Widget> widgets = [];
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(
-      onWillPop: () {
-        Navigator.pop(context);
-      },
-      child: Scaffold(
-        key: widget.globalKey,
-        drawer: NormalSideBar(),
-        body: Builder(
-          builder: (context) => Container(
-            color: Colors.white,
-            child: Center(
-              child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                children: args.shopModel.homeDesign,
-              ),
-            ),
-          ),
-        ),
+    List<Widget> homeDesign = [];
+    for (var model in args.shopModel.homeDesign) {
+      if (model is Widget) {
+        homeDesign.add(model);
+      } else {
+        homeDesign.add(model.toWidget(context));
+      }
+    }
+    return TemplateView(
+        widgets: Center(
+      child: ListView(
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        children: homeDesign,
       ),
-    );
+    ));
   }
 }

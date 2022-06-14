@@ -83,6 +83,7 @@ class RowImageSlideShow {
       textsWidgets = [
         GestureDetector(
           onTap: () {
+            print("should go to ...");
             args.tapped(context, ontap["$pageValue"]);
             print("Page: " + pageValue.toString());
           },
@@ -104,6 +105,7 @@ class RowImageSlideShow {
       textsWidgets = [
         GestureDetector(
           onTap: () {
+            print("should go to ... $context");
             args.tapped(context, ontap["$pageValue"]);
             print("Page: " + pageValue.toString());
           },

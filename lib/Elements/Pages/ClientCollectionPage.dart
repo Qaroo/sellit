@@ -36,7 +36,7 @@ class _ClientCollectionPageState extends State<ClientCollectionPage> {
   Widget build(BuildContext context) {
     if (args.shopModel == null) {
       return FutureBuilder(
-          future: database.load_shop(context, "check", globalKey),
+          future: database.load_shop(context, widget.domain, globalKey),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return loading_indicator(context);

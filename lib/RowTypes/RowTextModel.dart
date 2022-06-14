@@ -31,7 +31,7 @@ class RowTextModel {
     );
   }
 
-  Widget toWidget() {
+  Widget toWidget(BuildContext context) {
     List<String> paddings = padding.split(",");
     double leftPadding = double.parse(paddings[0]);
     double topPadding = double.parse(paddings[1]);
