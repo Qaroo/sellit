@@ -19,6 +19,7 @@ class ShopProductPage1 extends StatefulWidget {
 
   ItemModel item;
   String selectedSize = "";
+  List<dynamic> valid = [];
   Map<String, dynamic> selectedOptions = {};
 
   @override
@@ -30,6 +31,12 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
   Widget build(BuildContext context) {
     ItemModel product = widget.item;
     List<Widget> options = [];
+    if (widget.valid.isEmpty && widget.selectedOptions.isEmpty) {
+      setState(() {
+        print("default valid: " + product.calculate_stock([]).toString());
+        widget.valid = product.calculate_stock([]);
+      });
+    }
     if (product.options != null) {
       for (Map option in product.options) {
         List<dynamic> values = option[option.keys.elementAt(0)];
@@ -59,35 +66,62 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
               (index) {
                 return GestureDetector(
                     onTap: () {
-                      setState(() {
-                        widget.selectedOptions[option_name] =
-                            values.elementAt(index);
-                      });
+                      if (widget.valid.contains(values.elementAt(index))) {
+                        setState(() {
+                          widget.selectedOptions[option_name] =
+                              values.elementAt(index);
+                          widget.valid = product.calculate_stock(
+                              widget.selectedOptions.values.toList());
+                        });
+                      } else {
+                        setState(() {
+                          widget.selectedOptions = {};
+                          widget.selectedOptions[option_name] =
+                              values.elementAt(index);
+                          widget.valid = product.calculate_stock(
+                              widget.selectedOptions.values.toList());
+                        });
+                      }
                     },
                     child: (widget.selectedOptions[option_name] ==
                             values.elementAt(index))
                         ? Container(
                             width: 100,
                             height: 40,
-                            color: Color.fromRGBO(245, 245, 245, 1),
+                            color: Color.fromARGB(255, 48, 59, 142),
                             child: Center(
                               child: Text(
                                 values[index],
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 255, 255, 255)),
                               ),
                             ),
                           )
-                        : Container(
-                            width: 100,
-                            height: 40,
-                            color: Color.fromRGBO(0, 0, 0, 1),
-                            child: Center(
-                              child: Text(
-                                values[index],
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ));
+                        : (widget.valid.contains(values.elementAt(index)))
+                            ? Container(
+                                width: 100,
+                                height: 40,
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                                child: Center(
+                                  child: Text(
+                                    values[index],
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                width: 100,
+                                height: 40,
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                                child: Center(
+                                  child: Text(
+                                    values[index],
+                                    style: TextStyle(
+                                        color:
+                                            Color.fromARGB(65, 255, 255, 255)),
+                                  ),
+                                ),
+                              ));
               },
             ),
           ),

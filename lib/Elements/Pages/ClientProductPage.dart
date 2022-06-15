@@ -57,6 +57,9 @@ class _ClientProductPageState extends State<ClientProductPage> {
             if (snapshot.hasError || snapshot.data == null) {
               return UnknownPage();
             } else {
+              print("stock calculate: " +
+                  (snapshot.data as ItemModel)
+                      .calculate_stock(["S"]).toString());
               return TemplateView(
                   widgets: ShopProductPage1(item: snapshot.data));
             }
