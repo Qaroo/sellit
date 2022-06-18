@@ -20,8 +20,6 @@ Widget FilterTile(BuildContext context, String text) {
 
 //Style 2:
 Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
-  print("COllection product:" + args.products.toString());
-
   List<ItemModel> items_to_show = [];
   for (ItemModel item in args.shopModel.items) {
     if (tags.isEmpty) {
@@ -72,23 +70,81 @@ Widget ShopProductPageStyle2(BuildContext context, List<String> tags) {
                 ))),
             Container(
               width: MediaQuery.of(context).size.width,
-              child: Row(children: [
-                GestureDetector(
-                  onTap: () => _filterTapped(context),
-                  child: Container(
-                    decoration: BoxDecoration(border: Border.all()),
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: 40,
-                    child: Center(child: Text("סינון")),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(children: [
+                  GestureDetector(
+                    onTap: () => _filterTapped(context),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color.fromARGB(255, 53, 53, 53), width: 0.8),
+                      ),
+                      width: MediaQuery.of(context).size.width / 2 - 12,
+                      height: 40,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            right: 10,
+                            child: Container(
+                              height: 38,
+                              child: Center(
+                                child: Text("Filter",
+                                    style: GoogleFonts.ubuntu(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 20,
+                            child: Container(
+                              height: 40,
+                              child: Center(
+                                child: Icon(Icons.filter_alt_outlined),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                Container(
-                  decoration: BoxDecoration(border: Border.all()),
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: 40,
-                  child: Center(child: Text("מיון")),
-                ),
-              ]),
+                  Container(width: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Color.fromARGB(255, 53, 53, 53), width: 0.8),
+                    ),
+                    width: MediaQuery.of(context).size.width / 2 - 12,
+                    height: 40,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          right: 10,
+                          child: Container(
+                            height: 38,
+                            child: Center(
+                              child: Text("סדר לפי",
+                                  style: GoogleFonts.ubuntu(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          left: 20,
+                          child: Container(
+                            height: 40,
+                            child: Center(
+                              child: Icon(Icons.sort),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
+              ),
             ),
             Container(height: 3),
             Container(

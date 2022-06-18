@@ -30,10 +30,10 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
   @override
   Widget build(BuildContext context) {
     ItemModel product = widget.item;
+    List<ItemModel> similar = product.similarProducts(4);
     List<Widget> options = [];
     if (widget.valid.isEmpty && widget.selectedOptions.isEmpty) {
       setState(() {
-        print("default valid: " + product.calculate_stock([]).toString());
         widget.valid = product.calculate_stock([]);
       });
     }
@@ -41,7 +41,6 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
       for (Map option in product.options) {
         List<dynamic> values = option[option.keys.elementAt(0)];
         String option_name = option.keys.elementAt(0);
-        print("option_name: " + option_name);
         options.add(Container(
           width: MediaQuery.of(context).size.width * 0.9,
           child: Text(
@@ -172,135 +171,122 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
     page += [
       Column(
         children: [
-          Container(
-            height: 50,
-            width: MediaQuery.of(context).size.width * 0.9 - 20,
-            color: Colors.black,
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  //phone
-                  if (widget.selectedSize == "") {
-                    Widget okButton = FlatButton(
-                      child: Text("OK"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    );
+          Container(height: 10),
+          GestureDetector(
+            onTap: () async {
+              if (product.options == null) {
+                product.options = [];
+              }
+              if (widget.selectedOptions.keys.length !=
+                  product.options.length) {
+                //Alert
+                Widget okButton = TextButton(
+                  child: Text("אישור"),
+                  onPressed: () {},
+                );
 
-                    // set up the AlertDialog
-                    AlertDialog alert = AlertDialog(
-                      title: Text("Error"),
-                      content: Text("No size selected."),
-                      actions: [
-                        okButton,
-                      ],
-                    );
-
-                    // show the dialog
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return alert;
-                      },
-                    );
-                  }
-                },
-                child: GestureDetector(
-                  onTap: () async {
-                    if (product.options == null) {
-                      product.options = [];
-                    }
-                    if (widget.selectedOptions.keys.length !=
-                        product.options.length) {
-                      //Alert
-                      Widget okButton = TextButton(
-                        child: Text("אישור"),
-                        onPressed: () {},
-                      );
-
-                      // set up the AlertDialog
-                      //Change the button color by theme
-                      AlertStyle style1 = AlertStyle(
-                          animationType: AnimationType.grow,
-                          titleStyle: TextStyle(fontWeight: FontWeight.bold));
-                      Alert(
-                              context: context,
-                              title: "שגיאה",
-                              desc: "יש לבחור אפשרות אחת מכל קטגוריה",
-                              image: Lottie.asset(
-                                  "../../../../../../../../../../../../../../../assets/error_animation.json",
-                                  repeat: false),
-                              buttons: [
-                                DialogButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("אישור",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16)),
-                                )
-                              ],
-                              style: style1)
-                          .show();
-                    } else {
-                      final prefs = await SharedPreferences.getInstance();
-                      ItemCartModel model = ItemCartModel(
-                          name: product.name,
-                          price: product.price,
-                          id: product.id,
-                          image: product.image1,
-                          selected_options: widget.selectedOptions);
-                      String string_model = json.encode(model.toMap());
-                      List<String> items = prefs.getStringList('cart');
-                      if (items == null) {
-                        items = [];
-                      }
-                      items.add(string_model);
-                      await prefs.setStringList("cart", items);
-                      print("Cart: " + prefs.getStringList("cart").toString());
-                      AlertStyle style1 = AlertStyle(
-                          animationType: AnimationType.grow,
-                          titleStyle: TextStyle(fontWeight: FontWeight.bold));
-                      Alert(
-                              context: context,
-                              title: "אישור",
-                              desc: "המוצר נוסף בהצלחה לסל הקניות",
-                              image: Lottie.asset(
-                                  "../../../../../../../../../../../../../../../assets/cart_animation.json",
-                                  repeat: false),
-                              buttons: [
-                                DialogButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("המשך קניות",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16)),
-                                ),
-                                DialogButton(
-                                  onPressed: () {
-                                    (Router.of(context).routerDelegate
-                                            as SellitRouterDelegate)
-                                        .setNewRoutePath(RoutePath.cart());
-                                  },
-                                  child: Text("סיום הזמנה",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16)),
-                                )
-                              ],
-                              style: style1)
-                          .show();
-                    }
-                  },
-                  child: Text(
-                    "Add to cart",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                // set up the AlertDialog
+                //Change the button color by theme
+                AlertStyle style1 = AlertStyle(
+                    animationType: AnimationType.grow,
+                    titleStyle: TextStyle(fontWeight: FontWeight.bold));
+                Alert(
+                        context: context,
+                        title: "שגיאה",
+                        desc: "יש לבחור אפשרות אחת מכל קטגוריה",
+                        image: Lottie.asset(
+                            "../../../../../../../../../../../../../../../assets/error_animation.json",
+                            repeat: false),
+                        buttons: [
+                          DialogButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("אישור",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16)),
+                          )
+                        ],
+                        style: style1)
+                    .show();
+              } else {
+                final prefs = await SharedPreferences.getInstance();
+                ItemCartModel model = ItemCartModel(
+                    name: product.name,
+                    price: product.price,
+                    id: product.id,
+                    image: product.image1,
+                    selected_options: widget.selectedOptions);
+                String string_model = json.encode(model.toMap());
+                List<String> items = prefs.getStringList('cart');
+                if (items == null) {
+                  items = [];
+                }
+                items.add(string_model);
+                await prefs.setStringList("cart", items);
+                AlertStyle style1 = AlertStyle(
+                    animationType: AnimationType.grow,
+                    titleStyle: TextStyle(fontWeight: FontWeight.bold));
+                Alert(
+                        context: context,
+                        title: "אישור",
+                        desc: "המוצר נוסף בהצלחה לסל הקניות",
+                        image: Lottie.asset(
+                            "../../../../../../../../../../../../../../../assets/cart_animation.json",
+                            repeat: false),
+                        buttons: [
+                          DialogButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("המשך קניות",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16)),
+                          ),
+                          DialogButton(
+                            onPressed: () {
+                              (Router.of(context).routerDelegate
+                                      as SellitRouterDelegate)
+                                  .setNewRoutePath(RoutePath.cart());
+                            },
+                            child: Text("סיום הזמנה",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16)),
+                          )
+                        ],
+                        style: style1)
+                    .show();
+              }
+            },
+            child: Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width * 0.9 - 20,
+              color: Colors.black,
+              child: Center(
+                child: Text(
+                  "Add to cart",
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
-          )
+          ),
+          Container(
+            height: 150,
+            child: Column(
+              children: [
+                Container(height: 20),
+                Text("מידע על הפריט",
+                    textAlign: TextAlign.right,
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Container(height: 10),
+                Text(
+                  product.description,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
         ],
       )
     ];
@@ -340,6 +326,29 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                     ),
                   ),
                 ),
+                Container(
+                    height: 220,
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      children: List.generate(
+                        similar.length,
+                        (index) => Row(
+                          children: [
+                            GestureDetector(
+                              child: product_card(
+                                  similar[index],
+                                  218,
+                                  MediaQuery.of(context).size.width /
+                                          similar.length -
+                                      30,
+                                  context),
+                            ),
+                            Container(width: 10)
+                          ],
+                        ),
+                      ),
+                    )),
+                Container(height: 30)
               ],
             ),
           ),
@@ -427,7 +436,6 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
                                     onTap: () {
                                       setState(() {
                                         widget.selectedSize = si[index];
-                                        print(widget.selectedSize);
                                       });
                                     },
                                     child: (widget.selectedSize == si[index])
