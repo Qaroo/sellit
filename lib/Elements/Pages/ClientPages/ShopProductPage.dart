@@ -38,13 +38,13 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
       });
     }
     if (product.options != null) {
-      for (Map option in product.options) {
-        List<dynamic> values = option[option.keys.elementAt(0)];
-        String option_name = option.keys.elementAt(0);
+      Map option = product.options;
+      for (String option_name in option.keys) {
+        List<dynamic> values = option[option_name];
         options.add(Container(
           width: MediaQuery.of(context).size.width * 0.9,
           child: Text(
-            option.keys.elementAt(0),
+            option_name,
             style: GoogleFonts.gidugu(
               fontSize: 28,
             ),
@@ -175,7 +175,7 @@ class _ShopProductPage1State extends State<ShopProductPage1> {
           GestureDetector(
             onTap: () async {
               if (product.options == null) {
-                product.options = [];
+                product.options = {};
               }
               if (widget.selectedOptions.keys.length !=
                   product.options.length) {

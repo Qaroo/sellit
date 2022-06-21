@@ -13,7 +13,7 @@ class ItemModel {
   String id;
   List<dynamic> tags;
   Map<String, dynamic> sizes;
-  List<dynamic> options;
+  Map<String, dynamic> options;
   Map<String, dynamic> stock;
   //
 
